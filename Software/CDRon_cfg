@@ -6,6 +6,7 @@ import sys
 import subprocess
 import os
 import ast
+from modules.CDRon_cfgWifi import configure_wifi
 
 global code
 code = 0
@@ -70,9 +71,11 @@ else:
 # SELECT MENU
 
 menu = {}
-menu['1']="WIFI configuration" 
-menu['2']="..."
-menu['3']="..."
+menu['1']="Configure WIFI SSID." 
+menu['2']="Configure WIFI PASSWD."
+menu['3']="TEST MODE of motors (Change % duty)"
+menu['4']="TEST MODE of IMU (Read data)"
+menu['5']="TEST MODE of WIFI (Read IMU & change % duty)"
 menu['0']="Exit"
 
 while True: 
@@ -92,6 +95,7 @@ while True:
       print "EXIT" 
   elif selection == '1': 
       print "WIFI"
+      configure_wifi(fd_serial)
   elif selection == '2':
       print "find" 
   elif selection == '3': 
@@ -101,3 +105,4 @@ while True:
 
 # Cerrando puerto serial
 fd_serial.close()
+
