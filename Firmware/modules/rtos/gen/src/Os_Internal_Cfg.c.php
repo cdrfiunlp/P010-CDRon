@@ -51,6 +51,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * JuCe         Juan Cecconi
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20150619 v0.1.4 MaCe fix issue #279
@@ -72,7 +79,7 @@
 /*==================[internal data definition]===============================*/
 <?php
 /* get tasks */
-$tasks = getLocalList("/OSEK", "TASK");
+$tasks = $config->getList("/OSEK","TASK");
 
 foreach ($tasks as $task)
 {
@@ -107,9 +114,8 @@ foreach ($priority as $prio)
    print "TaskType ReadyList" . $prio . "[" . $count . "];\n\n";
 }
 
-$counters = getLocalList("/OSEK", "COUNTER");
-$alarms = getLocalList("/OSEK", "ALARM");
-
+$counters = $config->getList("/OSEK","COUNTER");
+$alarms = $config->getList("/OSEK","ALARM");
 foreach ($counters as $counter)
 {
    $countalarms = 0;
@@ -152,11 +158,11 @@ print " */\n";
 
 const TaskConstType TasksConst[TASKS_COUNT] = {
 <?php
-
+$count = 0;
 /* create task const structure */
-foreach ($tasks as $count=>$task)
+foreach ($tasks as $task)
 {
-   if ( $count != 0 ) print ",\n";
+   if ( $count++ != 0 ) print ",\n";
    print "   /* Task $task */\n";
    print "   {\n";
    print "       OSEK_TASK_$task,   /* task entry point */\n";
@@ -177,7 +183,7 @@ foreach ($tasks as $count=>$task)
    }
    else
    {
-     $this->log->error("Wrong definition of task type \"" . $extended . "\" for task \"" . $task . "\".");
+      error("Wrong definition of task type \"" . $extended . "\" for task \"" . $task . "\".");
    }
    $schedule = $config->getValue("/OSEK/" .$task, "SCHEDULE");
    if ($schedule == "FULL")
@@ -190,7 +196,7 @@ foreach ($tasks as $count=>$task)
    }
    else
    {
-     $this->log->error("Wrong definition of task schedule \"" . $schedule . "\" for task \"" . $task . "\".");
+      error("Wrong definition of task schedule \"" . $schedule . "\" for task \"" . $task . "\".");
    }
    print "         0\n";
    print "      }, /* task const flags */\n";
@@ -207,32 +213,10 @@ foreach ($tasks as $count=>$task)
    {
       $rlist .= "| ( 1 << $resource ) ";
    }
-   print "      $rlist,/* resources mask */\n";
-   if (isset($definitions["MCORE"]))
-   {
-      print "      " . $config->getValue("/OSEK/" . $task, "CORE") . " /* core */\n";
-   }
-   else
-   {
-      print "      0 /* core */\n";
-   }
+   print "      $rlist/* resources mask */\n";
    print "   }";
 }
 print "\n";
-?>
-};
-
-/** \brief RemoteTaskCore Array */
-const TaskCoreType RemoteTasksCore[REMOTE_TASKS_COUNT] = {<?php
-$rtasks = getRemoteList("/OSEK", "TASK");
-for($i=0; $i<count($rtasks); $i++)
-{
-   print $config->getValue("/OSEK/$rtasks[$i]", "CORE");
-   if ($i < (count($rtasks)-1))
-   {
-      print ", ";
-   }
-}
 ?>
 };
 
@@ -258,11 +242,12 @@ foreach ($appmodes as $appmode)
    }
    if (count($tasksinmode) > 0)
    {
+      $count = 0;
       print "/** \brief List of Auto Start Tasks in Application Mode $appmode */\n";
       print "const TaskType TasksAppMode" . $appmode . "[" . count($tasksinmode). "]  = {\n";
-      foreach($tasksinmode as $count=>$task)
+      foreach($tasksinmode as $task)
       {
-         if ($count != 0) print ",\n";
+         if ($count++ != 0) print ",\n";
          print "   $task";
       }
       print "\n};\n";
@@ -271,10 +256,10 @@ foreach ($appmodes as $appmode)
 
 print "/** \brief AutoStart Array */\n";
 print "const AutoStartType AutoStart[" . count($appmodes) . "]  = {\n";
-
-foreach ($appmodes as $count=>$appmode)
+$count = 0;
+foreach ($appmodes as $appmode)
 {
-   if ( $count != 0 ) print ",\n";
+   if ( $count++ != 0 ) print ",\n";
    print "   /* Application Mode $appmode */\n";
    print "   {\n";
    $tasksinmode = array();
@@ -358,16 +343,17 @@ foreach ($resources as $resource)
 }
 print "\n};\n";
 
-$alarms = getLocalList("/OSEK", "ALARM");
+$alarms = $config->getList("/OSEK","ALARM");
+
 print "/** TODO replace next line with: \n";
 print " ** AlarmVarType AlarmsVar[" . count($alarms) . "]; */\n";
 print "AlarmVarType AlarmsVar[" . count($alarms) . "];\n\n";
 
 print "const AlarmConstType AlarmsConst[" . count($alarms) . "]  = {\n";
-
-foreach ($alarms as $count=>$alarm)
+$count = 0;
+foreach ($alarms as $alarm)
 {
-   if ($count != 0)
+   if ($count++ != 0)
    {
       print ",\n";
    }
@@ -403,7 +389,7 @@ foreach ($alarms as $count=>$alarm)
       print "         0 /* no counter */\n";
       break;
    default:
-     $this->log->error("Alarm $alarm has an invalid action: $action");
+      error("Alarm $alarm has an invalid action: $action");
       break;
    }
    print "      },\n";
@@ -413,16 +399,14 @@ foreach ($alarms as $count=>$alarm)
 print "\n};\n\n";
 
 print "const AutoStartAlarmType AutoStartAlarm[ALARM_AUTOSTART_COUNT] = {\n";
-$first = true;
-foreach ($alarms as $count=>$alarm)
+$count = 0;
+foreach ($alarms as $alarm)
 {
    if ($config->getValue("/OSEK/" . $alarm, "AUTOSTART") == "TRUE")
    {
-      if ($first == false)
+      if ($count++ != 0)
       {
          print ",\n";
-      } else {
-         $first = false;
       }
       print "  {\n";
 
@@ -436,16 +420,15 @@ foreach ($alarms as $count=>$alarm)
 }
 print "\n};\n\n";
 
-$counters = getLocalList("/OSEK", "COUNTER");
-
+$counters = $config->getList("/OSEK","COUNTER");
 print "CounterVarType CountersVar[" . count($counters) . "];\n\n";
 
 $alarms = $config->getList("/OSEK","ALARM");
-
+$count = 0;
 print "const CounterConstType CountersConst[" . count($counters) . "] = {\n";
-foreach ($counters as $count=>$counter)
+foreach ($counters as $counter)
 {
-   if ($count!=0)
+   if ($count++!=0)
    {
       print ",\n";
    }
@@ -481,7 +464,7 @@ uint8 ErrorHookRunning;
 
 /*==================[external functions definition]==========================*/
 <?php
-$intnames = getLocalList("/OSEK", "ISR");
+$intnames = $config->getList("/OSEK","ISR");
 foreach ($intnames as $int)
 {
    $inttype = $config->getValue("/OSEK/" . $int,"INTERRUPT");

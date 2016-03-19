@@ -47,6 +47,12 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * v0.1.0 20141223 MaCe FreeOSEK architecture template file

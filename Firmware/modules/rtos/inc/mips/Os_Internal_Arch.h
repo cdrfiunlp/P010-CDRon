@@ -48,6 +48,12 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20141223 v0.1.0 MaCe initial port to compile for pic32

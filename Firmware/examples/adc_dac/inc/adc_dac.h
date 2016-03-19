@@ -1,4 +1,4 @@
-/* Copyright 2014, 2016, Mariano Cerdeiro
+/* Copyright 2014, Mariano Cerdeiro
  * Copyright 2014, Pablo Ridolfi
  * Copyright 2014, Juan Cecconi
  * Copyright 2014, Gustavo Muro
@@ -33,8 +33,8 @@
  *
  */
 
-#ifndef ADC_DAC_H
-#define ADC_DAC_H
+#ifndef _ADC_DAC_H_
+#define _ADC_DAC_H_
 /** \brief Blinking ADC & DAC example header file
  **
  ** This is a mini example of the CIAA Firmware
@@ -45,7 +45,7 @@
  ** @{ */
 /** \addtogroup Examples CIAA Firmware Examples
  ** @{ */
-/** \addtogroup ADC_DAC ADC & DAC example header file
+/** \addtogroup ADC DAC ADC & DAC example header file
  ** @{ */
 
 /*
@@ -74,5 +74,5 @@
 /** @} doxygen end group definition */
 /** @} doxygen end group definition */
 /*==================[end of file]============================================*/
-#endif /* #ifndef ADC_DAC_H */
+#endif /* #ifndef _ADC_DAC_H_ */
 

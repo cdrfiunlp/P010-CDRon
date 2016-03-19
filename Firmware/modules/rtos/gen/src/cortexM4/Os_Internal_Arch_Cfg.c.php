@@ -51,6 +51,14 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * PR           Pablo Ridolfi
+ * Apermingeat  Alejandro Permingeat
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * v0.1.4 20150307 MaCe rework port for CIAA-FLS
@@ -137,7 +145,7 @@ void DebugMon_Handler(void) {
 
 /*==================[external functions definition]==========================*/
 <?php
-switch ($definitions["CPU"])
+switch ($definition["CPU"])
 {
    case "mk60fx512vlq15":
       /* Interrupt sources for MK60F12.
@@ -315,13 +323,13 @@ switch ($definitions["CPU"])
       break;
 
    default:
-     $this->log->error("the CPU " . $definitions["CPU"] . " is not supported.");
+      error("the CPU " . $definition["CPU"] . " is not supported.");
       break;
 }
 
 $MAX_INT_COUNT = max(array_keys($intList))+1;
 
-if ($definitions["CPU"] == "mk60fx512vlq15") : ?>
+if ($definition["CPU"] == "mk60fx512vlq15") : ?>
 __attribute__ ((section(".isr_vector")))
 void (* const g_pfnVectors[])(void) = {
    /* System ISRs */
@@ -341,7 +349,7 @@ void (* const g_pfnVectors[])(void) = {
    0,                              /* Reserved                   */
    PendSV_Handler,                 /* The PendSV handler         */
    SysTick_Handler,                /* The SysTick handler        */
-<?php elseif ($definitions["CPU"] == "lpc4337") : ?>
+<?php elseif ($definition["CPU"] == "lpc4337") : ?>
 /** \brief LPC4337 Interrupt vector */
 __attribute__ ((section(".isr_vector")))
 void (* const g_pfnVectors[])(void) = {
@@ -363,14 +371,14 @@ void (* const g_pfnVectors[])(void) = {
    PendSV_Handler,                 /* The PendSV handler         */
    SysTick_Handler,                /* The SysTick handler        */
 <?php else :
-     $this->log->error("Not supported CPU: " . $definitions["CPU"]);
+      error("Not supported CPU: " . $definition["CPU"]);
    endif;
 ?>
    /*** User Interruptions ***/
 <?php
 
 /* get ISRs defined by user application */
-$intnames = getLocalList("/OSEK", "ISR");
+$intnames = $config->getList("/OSEK","ISR");
 
 for($i=0; $i < $MAX_INT_COUNT; $i++)
 {
@@ -392,7 +400,7 @@ for($i=0; $i < $MAX_INT_COUNT; $i++)
             $src_found = 1;
          } else
          {
-           $this->log->error("Interrupt $int type $inttype has an invalid category $intcat");
+            error("Interrupt $int type $inttype has an invalid category $intcat");
          }
       }
    }
@@ -409,10 +417,9 @@ void Enable_User_ISRs(void)
 {
 <?php
 /* get ISRs defined by user application */
-$intnames = getLocalList("/OSEK", "ISR");
+$intnames = $config->getList("/OSEK","ISR");
 foreach ($intnames as $int)
 {
-
    $source = $config->getValue("/OSEK/" . $int,"INTERRUPT");
    $prio = $config->getValue("/OSEK/" . $int,"PRIORITY");
 
@@ -428,7 +435,7 @@ void Enable_ISR2_Arch(void)
 {
 <?php
 /* get ISRs defined by user application */
-$intnames = getLocalList("/OSEK", "ISR");
+$intnames = $config->getList("/OSEK","ISR");
 foreach ($intnames as $int)
 {
    $source = $config->getValue("/OSEK/" . $int,"INTERRUPT");
@@ -448,7 +455,7 @@ void Disable_ISR2_Arch(void)
 {
 <?php
 /* get ISRs defined by user application */
-$intnames = getLocalList("/OSEK", "ISR");
+$intnames = $config->getList("/OSEK","ISR");
 foreach ($intnames as $int)
 {
    $source = $config->getValue("/OSEK/" . $int,"INTERRUPT");

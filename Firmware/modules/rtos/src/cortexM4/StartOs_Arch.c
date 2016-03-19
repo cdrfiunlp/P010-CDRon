@@ -46,6 +46,12 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * PR           Pablo Ridolfi
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20140608 v0.1.2 PR   First version for Cortex-M processors.

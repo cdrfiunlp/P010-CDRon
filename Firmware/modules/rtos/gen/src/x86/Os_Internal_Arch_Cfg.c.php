@@ -50,6 +50,12 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20080713 v0.1.0 MaCe initial version
@@ -129,7 +135,7 @@ for ($loopi = 0; $loopi < 32; $loopi++)
                   }
                   else
                   {
-                    $this->log->error("Interrupt $int type $inttype has an invalid category $intcat");
+                     error("Interrupt $int type $inttype has an invalid category $intcat");
                   }
                }
                break;
@@ -148,7 +154,7 @@ for ($loopi = 0; $loopi < 32; $loopi++)
                   }
                   else
                   {
-                    $this->log->error("Interrupt $int type $inttype has an invalid category $intcat");
+                     error("Interrupt $int type $inttype has an invalid category $intcat");
                   }
                }
                break;

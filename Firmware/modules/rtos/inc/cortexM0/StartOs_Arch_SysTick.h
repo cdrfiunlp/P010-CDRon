@@ -49,6 +49,12 @@
   ** @{ */
 
  /*
+  * Initials     Name
+  * ---------------------------
+  * PR           Pablo Ridolfi
+  */
+
+ /*
   * modification history (new versions first)
   * -----------------------------------------------------------
   * 20150831 v0.1.0 PR   First version for Cortex-M0.

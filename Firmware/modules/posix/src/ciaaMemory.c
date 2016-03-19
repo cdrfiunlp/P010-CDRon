@@ -41,6 +41,19 @@
 /** \addtogroup CIAA_Firmware CIAA Firmware
  ** @{ */
 /** \addtogroup POSIX POSIX Implementation
+ ** @{ */
+/*
+ * Initials     Name
+ * ---------------------------
+ * EzEs         Ezequiel Esposito
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140420 v0.0.1 EzEs initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaMemory.h"
 

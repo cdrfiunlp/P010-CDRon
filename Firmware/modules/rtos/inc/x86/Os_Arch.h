@@ -54,6 +54,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe          Mariano Cerdeiro
+ * JuCe         Juan Cecconi
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20141125 v0.1.2 JuCe   throw pending IRQ on ResumeOSInterrupts

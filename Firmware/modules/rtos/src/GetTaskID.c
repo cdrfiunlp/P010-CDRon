@@ -49,6 +49,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * KLi          Kang Li
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20090417 v0.1.3 MaCe update license

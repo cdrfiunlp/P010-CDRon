@@ -45,6 +45,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * GMuro        Gustavo Muro
+ *
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20150828 v0.8.2 GMuro   improve integer handlers

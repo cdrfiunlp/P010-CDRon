@@ -49,6 +49,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * KLi          Kang Li
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20090418 v0.1.4 MaCe bugfix function name to StartOS
@@ -87,11 +94,6 @@ void StartOS
    uint8f loopi;
 
    IntSecure_Start();
-
-#if (OSEK_MULTICORE == OSEK_ENABLE)
-   /* start multicore stack if required */
-   ciaaMulticore_init();
-#endif
 
    /* save the aplication mode */
    ApplicationMode = Mode;

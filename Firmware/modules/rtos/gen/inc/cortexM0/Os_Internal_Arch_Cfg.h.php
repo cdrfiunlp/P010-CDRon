@@ -55,6 +55,12 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * PR           Pablo Ridolfi
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * v0.1.1 20141130 PR   Added interrupt processing functions.

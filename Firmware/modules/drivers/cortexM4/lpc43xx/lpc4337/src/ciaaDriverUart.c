@@ -45,6 +45,19 @@
 /** \addtogroup UART UART Drivers
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * PaRi         Pablo Ridolfi
+ * JuCe         Juan Cecconi
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140731 v0.0.1   PR first functional version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaDriverUart.h"
 #include "ciaaPOSIX_stdlib.h"
@@ -59,7 +72,7 @@ typedef struct  {
    uint8_t countOfDevices;
 } ciaaDriverConstType;
 
-#define UART_RX_FIFO_SIZE       (16)
+#define UART_RX_FIFO_SIZE       (64)
 
 typedef struct {
    uint8_t hwbuf[UART_RX_FIFO_SIZE];

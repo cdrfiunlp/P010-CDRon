@@ -56,6 +56,12 @@
  *
  * PLEASE REMOVE THIS COMMENT
  *****************************************************************************/
+/*
+ * Initials     Name
+ * ---------------------------
+ * PR           Pablo Ridolfi
+ */
+
 /*****************************************************************************
  * add a new version to this file, add the date, your initials and the main
  * changes, only main changes shall be listed here. A detailed message log
