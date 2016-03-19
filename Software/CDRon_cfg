@@ -1,0 +1,103 @@
+#!/usr/bin/python
+# -*- coding: iso-8859-1 -*-
+import time
+import serial
+import sys
+import subprocess
+import os
+import ast
+
+global code
+code = 0
+ 
+if len(sys.argv) == 2:
+	print "Connecting serial port..."
+	try:
+		fd_serial = serial.Serial(sys.argv[1],115200)
+		print "Serial connect successfully."
+	except:
+		print "Error: Cannot open serial port..."
+		sys.exit(-1)
+else:
+	print "Input argument invalid."
+	sys.exit(-1)
+
+fd_serial.port = sys.argv[1]
+fd_serial.baud = 115200
+fd_serial.bytesize = serial.EIGHTBITS
+fd_serial.parity = serial.PARITY_NONE
+fd_serial.stopbits = serial.STOPBITS_ONE
+fd_serial.timeout = 1
+fd_serial.xonxoff = False     #disable software flow control
+fd_serial.rtscts = False     #disable hardware (RTS/CTS) flow control
+fd_serial.dsrdtr = False       #disable hardware (DSR/DTR) flow control
+
+try:
+	fd_serial.close()
+	fd_serial.open()
+
+except Exception, e:
+	print "Error: open serial port " + str(e) + "."
+	exit()
+
+
+
+# Retardo para establecer la conexión serial
+time.sleep(0.1) 
+
+
+
+fd_serial.flushInput()
+#string = raw_input("Set duty cycle [%]: ")
+#if string.find(".") == -1:
+#	string = string + ".0"
+print "Waiting for CIAA initialization...\n"
+while fd_serial.inWaiting() == 0 :
+	time.sleep(0.1)	
+receive = fd_serial.readline()
+if isinstance(receive,str):
+	if receive == "startup config?\n" :
+		fd_serial.write("startup config\n") 
+		print "OK... Startup configuration mode."
+	else:
+	        print "ERROR... Ending process."
+		sys.exit(-1)
+else:
+        print "ERROR... Ending process."
+        sys.exit(-1)
+
+
+# SELECT MENU
+
+menu = {}
+menu['1']="WIFI configuration" 
+menu['2']="..."
+menu['3']="..."
+menu['0']="Exit"
+
+while True: 
+  options=menu.keys()
+  options.sort() 
+  print "*************************************"
+  print "***            MENU               ***" 
+ 
+  for entry in options: 
+      print "    ", entry, " --> ", menu[entry]
+  print "***                               ***"
+  print "*************************************\n"
+ 
+
+  selection=raw_input("Please select an option: ") 
+  if selection =='0': 
+      print "EXIT" 
+  elif selection == '1': 
+      print "WIFI"
+  elif selection == '2':
+      print "find" 
+  elif selection == '3': 
+      break
+  else: 
+      print "Unknown Option Selected!" 
+
+# Cerrando puerto serial
+fd_serial.close()
