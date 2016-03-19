@@ -71,11 +71,10 @@ else:
 # SELECT MENU
 
 menu = {}
-menu['1']="Configure WIFI SSID." 
-menu['2']="Configure WIFI PASSWD."
-menu['3']="TEST MODE of motors (Change % duty)"
-menu['4']="TEST MODE of IMU (Read data)"
-menu['5']="TEST MODE of WIFI (Read IMU & change % duty)"
+menu['1']="Configure WIFI." 
+menu['2']="TEST MODE for motors (Change % duty)"
+menu['3']="TEST MODE for IMU (Read data)"
+menu['4']="TEST MODE for WIFI (Read IMU & change % duty)"
 menu['0']="Exit"
 
 while True: 
@@ -94,7 +93,6 @@ while True:
   if selection =='0': 
       print "EXIT" 
   elif selection == '1': 
-      print "WIFI"
       configure_wifi(fd_serial)
   elif selection == '2':
       print "find" 
