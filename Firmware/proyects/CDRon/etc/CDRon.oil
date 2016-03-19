@@ -68,8 +68,18 @@ TASK InitTask {
     EVENT = POSIXE;
 }
 
-TASK SerialEchoTask {
+TASK StartupConfig {
     PRIORITY = 5;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+TASK ConfigMode {
+    PRIORITY = 3;		
     ACTIVATION = 1;
     STACK = 512;
     TYPE = EXTENDED;

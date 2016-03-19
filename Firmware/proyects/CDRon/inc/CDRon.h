@@ -77,9 +77,14 @@
 
 #define I2C_CON_STO_user           (1UL << 4)	/*!< I2C STOP bit */
 
-
+#define MODE_UNDEF -1
+#define MODE_CONFIG 0
 
 /*==================[typedef]================================================*/
+struct status_struct{
+	int mode;
+};
+
 
 /*==================[external data declaration]==============================*/
 

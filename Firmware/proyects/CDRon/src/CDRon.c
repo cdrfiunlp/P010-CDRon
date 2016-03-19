@@ -105,6 +105,8 @@ uint32_t PWMduty;
 int PWMselect;
 uint8_t f_i2cerror = 0;
 unsigned int a= 0;
+extern struct status_struct;
+struct status_struct status;
 
 
 
@@ -172,46 +174,62 @@ TASK(InitTask)
    CDRon_initialization();
 
 
-
    /* Activates tasks */
-   ActivateTask(RefreshPWM);
-   ActivateTask(SerialEchoTask);
+   //ActivateTask(RefreshPWM);
+   ActivateTask(StartupConfig);
 
    /* terminate task */
    TerminateTask();
 }
 
 
-TASK(SerialEchoTask)
+TASK(StartupConfig)
 {
 	   char buf[64]={0};   /* buffer for uart operation (modificado en ciaaDriverUart.c    */
 	   int32_t ret=0;      /* return value variable for posix calls  */
-	   double f;
-	   char OK[]="AT\r\n";
-	   char *chr;
-	   char tmp_chr[2];
-	   char tmp_chr2 = 0xFF;
 
-	      /* wait for any character ... */
-	   while(1){
-		  ret = ciaaPOSIX_read(fd_uartUSB, buf, 64);
-	      if(ret > 0)
-	      {
-	          //ciaaPOSIX_write(fd_i2c, &tmp_chr2, 1);
-		      chr = strchr(buf,':');
-		      if (chr != NULL){
-		    	  chr[0] = '\0';
-		    	  tmp_chr[0] = chr[1];
-		    	  PWMselect = strtol(tmp_chr, NULL, 16);
-		    	  f= AUX_sstr2float(buf) * 4250.0;
-		    	  PWMduty = (int) (f);
-		    	  SetEvent(RefreshPWM, NEW_PWM);
-				  //memset(buf,0,sizeof(buf));
-		         /* ... and write them to the same device */
-		          ciaaPOSIX_write(fd_uartUSB, OK, ciaaPOSIX_strlen("Hecho.\n"));
-		      }
-	      }
+
+	   // Startup configuration mode
+	   ciaaPOSIX_write(fd_uartUSB, "startup config?\n", ciaaPOSIX_strlen("startup config?\n"));
+	   CDRon_delayMs(100);
+	   ciaaPOSIX_ioctl(fd_uartUSB, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+	   if(ret > 0){
+		   ciaaPOSIX_read(fd_uartUSB, buf, 64);
+		   if(ciaaPOSIX_strcmp(buf,"startup config\n")==0){
+			   status.mode = MODE_CONFIG;
+		       ActivateTask(ConfigMode);
+		   }
 	   }
+
+	  TerminateTask();
+}
+
+TASK(ConfigMode){
+	char buf[64]={0};   /* buffer for uart operation (modificado en ciaaDriverUart.c    */
+	int32_t ret=0;      /* return value variable for posix calls  */
+
+	while(1){
+		ciaaPOSIX_ioctl(fd_uartUSB, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+		if(ret > 0){
+			ciaaPOSIX_read(fd_uartUSB, buf, 64);
+			ret = strtol(buf,NULL,10);
+			switch (ret){
+				case 1:
+					break;
+				case 2:
+					break;
+
+				case 0:
+					/* terminate task */
+					TerminateTask();
+
+			}
+		}
+
+
+	}
+
+
 }
 
 TASK(RefreshPWM){
@@ -251,7 +269,8 @@ TASK(I2Cerror){
 /****************************************************************/
 
 int CDRon_initialization(void){
-
+	   char buf[64]={0};
+	   int32_t ret=0;
 
 	   /* open CIAA serial FT2232 */
 	   fd_uartUSB = ciaaPOSIX_open("/dev/serial/uart/1", ciaaPOSIX_O_RDWR);
@@ -276,19 +295,6 @@ int CDRon_initialization(void){
 	   ciaaPOSIX_ioctl(fd_i2c,(int32_t) ciaaPOSIX_IOCTL_SET_REGISTERADDWIDTH, (uint32_t) ciaaPOSIX_IOCTL_REGISTERADDWIDTH_8bits );
 
 
-
-	   /* initialization MPU6050 device */
-	   //if(MPU6050_init() != 0)
-	   //   ShutdownOS(0);
-
-	   //if(MPU6050_initDMP()!= 0)
-	   //	   ShutdownOS(0);
-
-	   CDRon_delayMs(100);
-
-	   //WIFI_init();
-
-
 	   /* initialization PWM outputs for brushless motors*/
 
 	   /* Datos de configuración:
@@ -301,6 +307,17 @@ int CDRon_initialization(void){
 	   fd_pwm1= ciaaPOSIX_open("/dev/dio/pwm/0", ciaaPOSIX_O_RDWR);
 	   fd_pwm2= ciaaPOSIX_open("/dev/dio/pwm/1", ciaaPOSIX_O_RDWR);
 	   fd_pwm3= ciaaPOSIX_open("/dev/dio/pwm/2", ciaaPOSIX_O_RDWR);
+
+	   /* initialization MPU6050 device */
+	   //if(MPU6050_init() != 0)
+	   //   ShutdownOS(0);
+
+	   //if(MPU6050_initDMP()!= 0)
+	   //	   ShutdownOS(0);
+
+	   CDRon_delayMs(100);
+
+	   //WIFI_init();
 
 
 }

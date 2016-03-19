@@ -9,6 +9,7 @@ extern int32_t fd_i2c, fd_uartWIFI;
 /****************************************************************/
 #define SERIAL_WIFI fd_uartWIFI
 
+
 struct WIFI_struct{
 	char SSID[20];
 	char password[20];
