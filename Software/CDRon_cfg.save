@@ -7,11 +7,7 @@ import subprocess
 import os
 import ast
 from modules.CDRon_cfgWifi import configure_wifi
-from modules.CDRon_tstMotors import tst_motors
-from modules.CDRon_shutdown import shutdown
-from modules.CDRon_tstimu import tst_imu
-global code
-code = 0
+file:///home/jorge/Git/CDRon/P010-CDRon/Software/modules/CDRon_cfgWifi.py 
  
 if len(sys.argv) == 2:
 	print "Connecting serial port..."
@@ -93,17 +89,15 @@ while True:
 
   selection=raw_input("Please select an option: ") 
   if selection =='0': 
-      shutdown(fd_serial)
-      
+      exit_cfg(fd_serial)
   elif selection == '1': 
       configure_wifi(fd_serial)
   elif selection == '2':
-      tst_motors(fd_serial) 
+      test_motors(fd_serial) 
   elif selection == '3': 
-      tst_imu(fd_serial)    	
+      break
   else: 
       print "Unknown Option Selected!" 
 
 # Cerrando puerto serial
 fd_serial.close()
-

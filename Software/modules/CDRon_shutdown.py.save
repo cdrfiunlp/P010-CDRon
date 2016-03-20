@@ -1,0 +1,17 @@
+#!/usr/bin/python
+import time
+import getpass
+import serial
+
+def shutdown(fd_serial):
+	print "Shutting down system..."
+	fd_serial.write("0\n")
+	if(fd_serial.inWaiting() != 0):
+	        receive = fd_serial.readline()
+		if receive == "OK\n":
+			print("Wifi configured correctly")
+		else:
+			print("ERROR... Wifi can not be configured correctly\n\n")
+	else:
+		print("ERROR... Wifi can not be configured correctly\n\n")
+	
