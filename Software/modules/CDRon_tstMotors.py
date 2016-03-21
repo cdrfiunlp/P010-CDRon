@@ -77,8 +77,22 @@ def tst_motors(fd_serial):
 		selection=raw_input("Select duty cycle 0-100% (-1 to return): ")
 		if selection == "-1":
 			break
-		print selection
-		fd_serial.write("2\n")
+		if selection.find(".") == -1:
+			selection = selection + ".0"
+
+		stof = float(selection)
+		if stof>100:
+			selection = "100.0"
+		if stof<0:
+			selection = "0.0"		
+                for entry in s_options:
+			if entry == "-1" or entry == '0':
+				continue
+			if select[entry] == "X":
+                            selection = selection + ":" + entry
+
+		fd_serial.write("2\n\0")
+		fd_serial.write(selection + "\n")
 		time.sleep(0.1)
 		if(fd_serial.inWaiting() != 0):
 	        	receive = fd_serial.readline()
