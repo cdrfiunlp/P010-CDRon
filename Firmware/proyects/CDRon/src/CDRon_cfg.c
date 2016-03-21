@@ -11,7 +11,7 @@ extern struct status_struct;
 extern struct status_struct status;
 
 extern struct struct_motor cfg_motor;
-
+extern volatile struct WIFI_struct WIFI;
 
 /****************************************************************/
 /**************** Funciones de la CIAA **************************/
@@ -57,7 +57,6 @@ TASK(ConfigMode){
 			ret = strtol(buf,NULL,10);
 			switch (ret){
 				case 1:
-					ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
 					ActivateTask(Wifi_cfg);
 					break;
 				case 2:
@@ -69,6 +68,8 @@ TASK(ConfigMode){
 					break;
 
 				case 0:
+					ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
+					ShutdownOS(0);
 					/* terminate task */
 					TerminateTask();
 
@@ -79,6 +80,25 @@ TASK(ConfigMode){
 }
 
 TASK(Wifi_cfg){
+	char buf[64]={0};   /* buffer for uart operation (modificado en ciaaDriverUart.c    */
+	int32_t ret=0;      /* return value variable for posix calls  */
+	char* chr;
+	int len;
+
+
+	CDRon_delayMs(10);
+	ciaaPOSIX_ioctl(fd_uartUSB, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+	if(ret > 0){
+		ciaaPOSIX_read(fd_uartUSB, buf, 64);
+		len=strcspn(buf, ":");
+		strncpy(WIFI.SSID,buf,len);
+		chr = strchr(buf,':');
+		strcpy(WIFI.password, &chr[1]);
+
+
+	}
+	ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
+	WIFI_saveWIFI();
 	TerminateTask();
 }
 

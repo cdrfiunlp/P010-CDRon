@@ -89,6 +89,12 @@ struct struct_motor{
 	double PWMduty[4];
 };
 
+struct WIFI_struct{
+	char SSID[20];
+	char password[20];
+	char IPaddress[20];
+};
+
 
 /*==================[external data declaration]==============================*/
 

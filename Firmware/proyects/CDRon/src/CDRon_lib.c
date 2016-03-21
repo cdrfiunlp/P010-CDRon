@@ -1,5 +1,6 @@
 
 #include "CDRon_lib.h"
+#include "CDRon.h"
 #include "ciaaDriverUart.h"
 /* Declaraciones externas */
 extern int32_t fd_i2c, fd_uartWIFI;
@@ -9,12 +10,7 @@ extern int32_t fd_i2c, fd_uartWIFI;
 /****************************************************************/
 #define SERIAL_WIFI fd_uartWIFI
 
-
-struct WIFI_struct{
-	char SSID[20];
-	char password[20];
-	char IPaddress[20];
-} WIFI;
+extern volatile struct WIFI_struct WIFI;
 
 
 int CDRon_i2c_write(unsigned char slave_addr,
@@ -83,7 +79,7 @@ int WIFI_init(void){
 
 	  WIFI_configure();
 
-
+/*
 	  if(WIFI_sendCommand("AT\r\n","OK") != 0)
 		  return -1;
 	  if(WIFI_sendCommand("AT+CWMODE=1\r\n","OK") != 0)
@@ -93,7 +89,7 @@ int WIFI_init(void){
 
 	  CDRon_delayMs(1000);
 	  WIFI_connectAP();
-
+*/
 
 }
 
@@ -142,11 +138,15 @@ void WIFI_configure(void){
 	volatile uint32_t * EEPROM = 0x20040000;
 	uint32_t * CONFIG = &WIFI;
 	uint8_t i,len;
+
+	CDRon_initEEPROM();
 	len = sizeof(WIFI) >>2;
 	for(i=0;i<len;i++){
 		CONFIG[i] = EEPROM[i];
-		CDRon_delayMs(1);
+		CDRon_delayMs(10);
 	}
+	CDRon_delayMs(10);
+	CDRon_disableEEPROM();
 }
 
 void WIFI_saveWIFI(void){
@@ -157,13 +157,13 @@ void WIFI_saveWIFI(void){
 	CDRon_initEEPROM();
 	for(i=0;i<10;i++){
 		EEPROM[i] = 0;
-		CDRon_delayMs(1);
+		CDRon_delayMs(10);
 	}
 	CDRon_delayMs(10);
 	len = sizeof(WIFI) >>2;
 	for(i=0;i<len;i++){
 		EEPROM[i] = CONFIG[i];
-		CDRon_delayMs(1);
+		CDRon_delayMs(10);
 	}
 	CDRon_delayMs(10);
 	CDRon_disableEEPROM();

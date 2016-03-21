@@ -102,6 +102,7 @@ unsigned int a= 0;
 
 struct status_struct status;
 struct struct_motor cfg_motor;
+volatile struct WIFI_struct WIFI;
 
 
 
@@ -245,7 +246,7 @@ int CDRon_initialization(void){
 
 	   CDRon_delayMs(100);
 
-	   //WIFI_init();
+	   WIFI_init();
 
 
 }
