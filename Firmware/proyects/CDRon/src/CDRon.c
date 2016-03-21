@@ -72,17 +72,12 @@
 
 #include "CDRon.h"         /* <= own header */
 #include "CDRon_lib.h"
+#include "CDRon_cfg.h"
 #include "os.h"               /* <= operating system header */
 
 #include "ciaaPOSIX_stdio.h"  /* <= device handler header */
 #include "ciaaPOSIX_string.h" /* <= string header */
 #include "ciaak.h"            /* <= ciaa kernel header */
-
-
-//#include "scu_18xx_43xx.h"
-//#include "pinint_18xx_43xx.h"
-//#include "gpio_18xx_43xx.h"
-
 
 
 /*==================[macros and definitions]=================================*/
@@ -99,14 +94,14 @@
  */
 int32_t fd_uartUSB,fd_uartWIFI;
 int32_t fd_i2c;
-int32_t fd_pwm1,fd_pwm2,fd_pwm3;
+int32_t fd_pwm[4];
+int32_t fd_pwm2;
 
-uint32_t PWMduty;
-int PWMselect;
 uint8_t f_i2cerror = 0;
 unsigned int a= 0;
-extern struct status_struct;
+
 struct status_struct status;
+struct struct_motor cfg_motor;
 
 
 
@@ -127,32 +122,14 @@ struct status_struct status;
 int main(void)
 {
    /* Starts the operating system in the Application Mode 1 */
-   /* This example has only one Application Mode */
-   StartOS(AppMode1);
+	StartOS(AppMode1);
 
    /* StartOs shall never returns, but to avoid compiler warnings or errors
     * 0 is returned */
+
    return 0;
 }
 
-/** \brief Error Hook function
- *
- * This fucntion is called from the os if an os interface (API) returns an
- * error. Is for debugging proposes. If called this function triggers a
- * ShutdownOs which ends in a while(1).
- *
- * The values:
- *    OSErrorGetServiceId
- *    OSErrorGetParam1
- *    OSErrorGetParam2
- *    OSErrorGetParam3
- *    OSErrorGetRet
- *
- * will provide you the interface, the input parameters and the returned value.
- * For more details see the OSEK specification:
- * http://portal.osek-vdx.org/files/pdf/specs/os223.pdf
- *
- */
 void ErrorHook(void)
 {
    ciaaPOSIX_printf("ErrorHook was called\n");
@@ -168,14 +145,15 @@ TASK(InitTask)
 {
    int ret;
    uint32_t outputs;
+
    /* init CIAA kernel and devices */
    ciaak_start();
 
+
+   /* CDRon initialization */
    CDRon_initialization();
 
-
-   /* Activates tasks */
-   //ActivateTask(RefreshPWM);
+   /* Activates startupConfigtasks */
    ActivateTask(StartupConfig);
 
    /* terminate task */
@@ -183,73 +161,19 @@ TASK(InitTask)
 }
 
 
-TASK(StartupConfig)
-{
-	   char buf[64]={0};   /* buffer for uart operation (modificado en ciaaDriverUart.c    */
-	   int32_t ret=0;      /* return value variable for posix calls  */
+TASK(motorUpdate){
+	  int i;
+	  uint32_t PWMduty;
+	  double f;
 
-
-	   // Startup configuration mode
-	   ciaaPOSIX_write(fd_uartUSB, "startup config?\n", ciaaPOSIX_strlen("startup config?\n"));
-	   CDRon_delayMs(100);
-	   ciaaPOSIX_ioctl(fd_uartUSB, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
-	   if(ret > 0){
-		   ciaaPOSIX_read(fd_uartUSB, buf, 64);
-		   if(ciaaPOSIX_strcmp(buf,"startup config\n")==0){
-			   status.mode = MODE_CONFIG;
-		       ActivateTask(ConfigMode);
-		   }
-	   }
-
+	  for(i=0;i<3;i++){
+	  	  f= cfg_motor.PWMduty[i] * 4250.0;
+		  PWMduty = (int) (f);
+		  ciaaPOSIX_write(fd_pwm[i], &PWMduty, 4);
+	  }
 	  TerminateTask();
 }
 
-TASK(ConfigMode){
-	char buf[64]={0};   /* buffer for uart operation (modificado en ciaaDriverUart.c    */
-	int32_t ret=0;      /* return value variable for posix calls  */
-
-	while(1){
-		ciaaPOSIX_ioctl(fd_uartUSB, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
-		if(ret > 0){
-			ciaaPOSIX_read(fd_uartUSB, buf, 64);
-			ret = strtol(buf,NULL,10);
-			switch (ret){
-				case 1:
-					break;
-				case 2:
-					break;
-
-				case 0:
-					/* terminate task */
-					TerminateTask();
-
-			}
-		}
-
-
-	}
-
-
-}
-
-TASK(RefreshPWM){
-	while (1){
-
-	  WaitEvent(NEW_PWM);	// suspend task up to NEW_PWM event
-	  ClearEvent(NEW_PWM);
-
-
-	  if( (PWMselect & 0x1) == 1)
-		  ciaaPOSIX_write(fd_pwm1, &PWMduty, 4);
-
-	  if( ((PWMselect>>1) & 0x1) == 1)
-		  ciaaPOSIX_write(fd_pwm2, &PWMduty, 4);
-
-	  if( ((PWMselect>>2) & 0x1) == 1 )
-		  ciaaPOSIX_write(fd_pwm3, &PWMduty, 4);
-
-	}
-}
 
 TASK(I2Cerror){
 	volatile uint32_t * CONSET = 0x400A1000;
@@ -304,9 +228,13 @@ int CDRon_initialization(void){
 	    * 	- Resolución en tiempo ~= 4.9 ns
 	    */
 
-	   fd_pwm1= ciaaPOSIX_open("/dev/dio/pwm/0", ciaaPOSIX_O_RDWR);
-	   fd_pwm2= ciaaPOSIX_open("/dev/dio/pwm/1", ciaaPOSIX_O_RDWR);
-	   fd_pwm3= ciaaPOSIX_open("/dev/dio/pwm/2", ciaaPOSIX_O_RDWR);
+	   GetResource(MOTOR);
+
+	   fd_pwm[0]= ciaaPOSIX_open("/dev/dio/pwm/0", ciaaPOSIX_O_RDWR);
+	   fd_pwm[1]= ciaaPOSIX_open("/dev/dio/pwm/1", ciaaPOSIX_O_RDWR);
+	   fd_pwm[2]= ciaaPOSIX_open("/dev/dio/pwm/2", ciaaPOSIX_O_RDWR);
+
+	   ReleaseResource(MOTOR);
 
 	   /* initialization MPU6050 device */
 	   //if(MPU6050_init() != 0)

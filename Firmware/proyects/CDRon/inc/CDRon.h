@@ -85,6 +85,10 @@ struct status_struct{
 	int mode;
 };
 
+struct struct_motor{
+	double PWMduty[4];
+};
+
 
 /*==================[external data declaration]==============================*/
 

@@ -65,21 +65,44 @@ TASK InitTask {
     TYPE = BASIC;
     SCHEDULE = NON;
     RESOURCE = POSIXR;
+    RESOURCE = MOTOR;
     EVENT = POSIXE;
 }
 
 TASK StartupConfig {
-    PRIORITY = 5;		
+    PRIORITY = 3;		
     ACTIVATION = 1;
     STACK = 512;
-    TYPE = EXTENDED;
+    TYPE = BASIC;
     SCHEDULE = FULL;
     EVENT = POSIXE;
     RESOURCE = POSIXR;
 }
 
 TASK ConfigMode {
-    PRIORITY = 3;		
+    PRIORITY = 2;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = BASIC;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+
+TASK Wifi_cfg {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = BASIC;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+
+TASK Motor_tst {
+    PRIORITY = 4;		
     ACTIVATION = 1;
     STACK = 512;
     TYPE = EXTENDED;
@@ -88,19 +111,30 @@ TASK ConfigMode {
     RESOURCE = POSIXR;
 }
 
-TASK RefreshPWM {
+TASK motorUpdate {
 	SCHEDULE = FULL;
 	TYPE = EXTENDED;
 	
 	ACTIVATION = 1;
 	PRIORITY = 4;
-	STACK = 128;
+	STACK = 512;
 
-	EVENT = NEW_PWM;
+	EVENT = UPDATEMOTOR;
 	AUTOSTART = FALSE;
 	RESOURCE = POSIXR;
     EVENT = POSIXE;
 }
+
+TASK IMU_tst {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
 
 TASK I2Cerror {
 	SCHEDULE = FULL;
@@ -123,9 +157,9 @@ ALARM ActivatePeriodicTask {
 }
 
 RESOURCE = POSIXR;
-
+RESOURCE = MOTOR;
 EVENT = POSIXE;
-EVENT = NEW_PWM;
+EVENT = UPDATEMOTOR;
 
 APPMODE = AppMode1;
 
