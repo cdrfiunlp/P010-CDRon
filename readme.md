@@ -13,12 +13,13 @@ Repositorio para el proyecto CDRon, actualmente en su estapa de desarrollo.
 * Colaboradores auxiliares:
 
 -- Lucas Martire
+-- Santiago Rodríguez
 
 ## Estado del proyecto:
-- [V] Inicio de desarrollo de proyecto en la plataforma EDU-CIAA.
-- [V] Configuración de puertos PWM para control de motores Brushless.
+- [X] Inicio de desarrollo de proyecto en la plataforma EDU-CIAA.
+- [X] Configuración de puertos PWM para control de motores Brushless.
 - [X] Configuración del ESC para control de motores Brushless. 
-- [V] Comunicación de plataforma con PC por medio de protocolo USB-serie.
-- [V] Comunicación, lectura y procesamiento de datos de acelerómetro y giroscopio con IMU mpu6050.
-- [V] Comunicación y establecimiento de enlace inalámbrico WIFI en modo AP.
+- [X] Comunicación de plataforma con PC por medio de protocolo USB-serie.
+- [X] Comunicación, lectura y procesamiento de datos de acelerómetro y giroscopio con IMU mpu6050.
+- [X] Comunicación y establecimiento de enlace inalámbrico WIFI en modo AP.
 
