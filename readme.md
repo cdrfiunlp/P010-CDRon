@@ -4,16 +4,19 @@
 Repositorio para el proyecto CDRon, actualmente en su estapa de desarrollo.
 
 ## Integrantes:
+
 * Coordinador general:
 
--- Anderson, Jorge (anderson.jorgeluis@gmail.com)
+  - Anderson, Jorge (anderson.jorgeluis@gmail.com)
+
 * Colaboradores:
 
--- (Vacio)
+  - (Vacio)
 * Colaboradores auxiliares:
 
--- Lucas Martire
--- Santiago Rodríguez
+  - Lucas Martire
+  - Santiago Rodríguez
+  - Germán Scillone
 
 ## Estado del proyecto:
 - [X] Inicio de desarrollo de proyecto en la plataforma EDU-CIAA.
