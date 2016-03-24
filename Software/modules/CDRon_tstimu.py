@@ -14,7 +14,7 @@ def tst_imu(fd_serial):
 		if(fd_serial.inWaiting() != 0):
 			receive = fd_serial.readline()
 			receive = receive.split(':')
-			print "Yaw: " + receive[0] + " || Pitch: " + receive[1] + " || Roll: " + receive[2]
+			print "Pitch: " + receive[0] + " || Roll: " + receive[1] + " || Yaw: " + receive[2]
 		else:
 			print("ERROR... Cannot be read the IMU.\n\n")
    except KeyboardInterrupt:
