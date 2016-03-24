@@ -1,0 +1,31 @@
+#!/usr/bin/python
+import time
+import getpass
+import serial
+
+def tst_motors(fd_serial):
+	menu = {}
+	menu['-1'] = "End test"
+	menu['1']="Motor 1"
+	menu['2']="Motor 2"
+	menu['3']="Motor 3"
+	menu['4']="Motor 4"
+	menu['0']="Select duty cycle"
+	motors = 0;
+
+
+	print "Starting motors test...\n"
+	flag = True
+	while (flag):
+		selection=raw_input("Please select motors to change: ")
+		fd_serial.write("2\n" + SSID + "\n" + PASS + "\n")
+		time.sleep(0.1)
+		if(fd_serial.inWaiting() != 0):
+	        	receive = fd_serial.readline()
+			if receive == "OK\n":
+				print("Done.")
+			else:
+				print("ERROR... Cannot be changed the duty cycle.\n\n")
+		else:
+			print("ERROR... Cannot be changed the duty cycle.\n\n")
+	
