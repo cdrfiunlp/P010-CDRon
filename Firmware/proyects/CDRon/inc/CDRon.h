@@ -95,6 +95,13 @@ struct WIFI_struct{
 	char IPaddress[20];
 };
 
+volatile struct IMU_struct{
+	float quad[4];
+    float yaw;
+    float pitch;
+    float roll;
+    char DRDY;
+};
 
 /*==================[external data declaration]==============================*/
 

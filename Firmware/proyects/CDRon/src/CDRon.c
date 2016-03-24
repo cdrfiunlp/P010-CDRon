@@ -103,7 +103,7 @@ unsigned int a= 0;
 struct status_struct status;
 struct struct_motor cfg_motor;
 volatile struct WIFI_struct WIFI;
-
+volatile struct IMU_struct IMU;
 
 
 /*==================[external data definition]===============================*/
@@ -175,6 +175,12 @@ TASK(motorUpdate){
 	  TerminateTask();
 }
 
+TASK(IMUUpdate){
+		MPU6050_getData();
+		IMU.DRDY = 1;
+		TerminateTask();
+}
+
 
 TASK(I2Cerror){
 	volatile uint32_t * CONSET = 0x400A1000;
@@ -237,16 +243,18 @@ int CDRon_initialization(void){
 
 	   ReleaseResource(MOTOR);
 
-	   /* initialization MPU6050 device */
-	   //if(MPU6050_init() != 0)
-	   //   ShutdownOS(0);
-
-	   //if(MPU6050_initDMP()!= 0)
-	   //	   ShutdownOS(0);
-
 	   CDRon_delayMs(100);
 
-	   WIFI_init();
+	   /* initialization MPU6050 device */
+	   if(MPU6050_init() != 0)
+	      ShutdownOS(0);
+
+	   if(MPU6050_initDMP()!= 0)
+	   	   ShutdownOS(0);
+
+		IMU.DRDY = 1;
+
+	   //WIFI_init();
 
 
 }
@@ -282,7 +290,11 @@ int CDRon_getMs(unsigned long *count){
 
 ISR(GPIO5_IRQHandler)
 {
-	MPU6050_getData();
+
+	if(IMU.DRDY == 1){
+		IMU.DRDY = 0;
+		ActivateTask(IMUUpdate);
+	}
 	MPU6050_clearInterrupt();
 }
 

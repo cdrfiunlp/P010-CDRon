@@ -73,6 +73,7 @@
 #COMPILER       ?= gcc
 BOARD          ?= edu_ciaa_nxp
 FLAGS	+= -Wno-unused-function
+LFLAGS += -lc -lrdimon
 ###############################################################################
 # rtostests options
 #

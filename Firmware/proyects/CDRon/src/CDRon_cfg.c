@@ -12,6 +12,7 @@ extern struct status_struct status;
 
 extern struct struct_motor cfg_motor;
 extern volatile struct WIFI_struct WIFI;
+extern volatile struct IMU_struct IMU;
 
 /****************************************************************/
 /**************** Funciones de la CIAA **************************/
@@ -63,7 +64,6 @@ TASK(ConfigMode){
 					ActivateTask(Motor_tst);
 					break;
 				case 3:
-					ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
 					ActivateTask(IMU_tst);
 					break;
 
@@ -136,6 +136,15 @@ TASK(Motor_tst){
 }
 
 TASK(IMU_tst){
+	char str[30] = {0};
+
+	ftoa (IMU.pitch,str, 2);
+	str[ciaaPOSIX_strlen(str)] = ':';
+	ftoa (IMU.roll,&str[ciaaPOSIX_strlen(str)], 2);
+	str[ciaaPOSIX_strlen(str)] = ':';
+	ftoa (IMU.yaw,&str[ciaaPOSIX_strlen(str)], 2);
+	str[ciaaPOSIX_strlen(str)] = '\n';
+	ciaaPOSIX_write(fd_uartUSB, str, ciaaPOSIX_strlen(str));
 	TerminateTask();
 }
 

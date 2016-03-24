@@ -30,14 +30,6 @@ short gyro[3], accel[3], sensors;
 static signed char gyro_orientation[9] = {-1, 0, 0,
                                            0,-1, 0,
                                            0, 0, 1};
-volatile struct IMU_struct{
-	float quad[4];
-    float yaw;
-    float pitch;
-    float roll;
-    uint8_t DRDY;
-} IMU;
-
 typedef struct {
    uint8_t hwbuf[64];
    uint8_t rxcnt;

@@ -11,7 +11,7 @@ extern int32_t fd_i2c, fd_uartWIFI;
 #define SERIAL_WIFI fd_uartWIFI
 
 extern volatile struct WIFI_struct WIFI;
-
+extern volatile struct IMU_struct IMU;
 
 int CDRon_i2c_write(unsigned char slave_addr,
                      unsigned char reg_addr,
@@ -303,6 +303,7 @@ void MPU6050_setInterrupt(void){
 	Chip_PININT_SetPinModeEdge(LPC_GPIO_PIN_INT,PININTCH5);
 	Chip_PININT_EnableIntHigh(LPC_GPIO_PIN_INT,PININTCH5);
 	Chip_PININT_DisableIntLow(LPC_GPIO_PIN_INT, PININTCH5);
+	return;
 }
 
 void MPU6050_clearInterrupt(void){
@@ -453,4 +454,26 @@ double AUX_sstr2float(char *s)
 		e++;
 	}
 	return a;
+}
+
+void ftoa (double n_float,char *str, int32_t  cifras_decimales)
+{
+  int8_t  i;
+  uint32_t factor=1,aux,entero, decimal;
+  char cadena[cifras_decimales];
+  str[0]='\0';
+  if (n_float<0)
+  {
+      n_float=n_float*-1;
+      strcat(str,"-");
+  }
+  for(i=1;i<=cifras_decimales;i++) factor=factor*10;
+  entero  = (uint32_t) n_float;
+  aux=(uint32_t)(n_float*factor);
+  decimal = (uint32_t)(aux-(entero*factor));
+  itoa(entero,cadena,10);
+  strcat(str,cadena);
+  strcat(str,".");
+  itoa(decimal,cadena,10);
+  strcat(str,cadena);
 }
