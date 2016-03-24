@@ -45,6 +45,18 @@
 /** \addtogroup Receive Receive System Test
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140804 v0.0.1 initials initial version
+ */
+
 /*==================[inclusions]=============================================*/
 
 /*==================[macros]=================================================*/

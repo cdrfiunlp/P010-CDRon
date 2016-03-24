@@ -47,6 +47,18 @@
 /** \addtogroup POSIX POSIX Implementation
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140525 v0.0.1 initials initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaPOSIX_stdint.h"
 #include "ciaaDevices.h"
@@ -145,7 +157,7 @@ extern ssize_t ciaaSerialDevices_write(ciaaDevices_deviceType const * device, ui
  ** This interface informs the serial device that a recepction has been completed
  **
  ** \param[in]    TODO fildes file descriptor of the confirmation
- ** \param[in]    nbyte count of confirmed bytes, if 0 the parameter will be ignored
+ ** \param[in]    nbyte count of received bytes
  **
  ** \remarks This interface may be called from ISR context
  **/

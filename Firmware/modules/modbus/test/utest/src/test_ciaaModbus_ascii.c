@@ -40,6 +40,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * GMuro        Gustavo Muro
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20140624 v0.0.1 MaCe implement first tests

@@ -179,7 +179,7 @@ TASK(InitTask)
    fd_uart1 = ciaaPOSIX_open("/dev/serial/uart/1", ciaaPOSIX_O_RDWR);
 
    /* open UART connected to RS232 connector */
-   fd_uart2 = ciaaPOSIX_open("/dev/serial/uart/2", ciaaPOSIX_O_RDWR);
+   //fd_uart2 = ciaaPOSIX_open("/dev/serial/uart/2", ciaaPOSIX_O_RDWR);
 
    /* change baud rate for uart usb */
    ciaaPOSIX_ioctl(fd_uart1, ciaaPOSIX_IOCTL_SET_BAUDRATE, (void *)ciaaBAUDRATE_115200);
@@ -226,7 +226,7 @@ TASK(SerialEchoTask)
          ciaaPOSIX_write(fd_uart1, buf, ret);
 
          /* also write them to the other device */
-         ciaaPOSIX_write(fd_uart2, buf, ret);
+         //ciaaPOSIX_write(fd_uart2, buf, ret);
       }
 
       /* blink output 5 with each loop */

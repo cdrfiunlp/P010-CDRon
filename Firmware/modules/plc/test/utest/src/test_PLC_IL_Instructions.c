@@ -39,6 +39,18 @@
 /** \addtogroup PLC PLC Module
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20150522 v0.0.1 MaCe initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "unity.h"
 #include "PLC_Registers.h"

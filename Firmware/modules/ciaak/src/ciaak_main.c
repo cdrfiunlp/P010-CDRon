@@ -41,16 +41,31 @@
 /** \addtogroup Template Template to start a new module
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ *
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * yyyymmdd v0.0.1 initials initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaak.h"
 /* TODO configuration dependent includes */
 #include "ciaaDevices.h"
 #include "ciaaSerialDevices.h"
 #include "ciaaBlockDevices.h"
+#include "ciaaI2CDevices.h"
 #include "ciaaDriverUart.h"
+#include "ciaaDriverI2C.h"
 #include "ciaaDriverFlash.h"
 #include "ciaaDriverAio.h"
 #include "ciaaDriverDio.h"
+#include "ciaaDriverPwm.h"
 
 #include "ciaaPOSIX_stdlib.h"
 
@@ -79,15 +94,17 @@ void ciaak_start(void)
 
    /* init devices types */
    ciaaSerialDevices_init();
+   ciaaI2CDevices_init();
    ciaaBlockDevices_init();
 
    /* init drivers */
    ciaaDriverUart_init();
+   ciaaDriverI2C_init();
    ciaaDriverFlash_init();
 
    /* ciaaDioDevices_init(); */
    ciaaDriverDio_init();
-
+   ciaaDriverPwm_init();
    ciaaDriverAio_init();
 }
 

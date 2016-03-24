@@ -50,6 +50,13 @@
 
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * KLi          Kang Li
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20090424 v0.1.3 MaCe correct the calculation of the alarm time

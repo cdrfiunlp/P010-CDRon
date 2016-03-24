@@ -51,6 +51,12 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20090130 v0.1.1 MaCe add MAIN_MEMMAP check

@@ -46,6 +46,18 @@
 /** \addtogroup POSIX
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20150221 v0.0.1 MaCe initial version
+ */
+
 /*==================[inclusions]=============================================*/
 
 /*==================[cplusplus]==============================================*/
@@ -180,6 +192,10 @@ extern "C" {
  ** Returned none
  **/
 #define ciaaPOSIX_IOCTL_SET_NONBLOCK_MODE              9
+
+
+// Modificación de librería
+#define ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER                10
 
 /*==================[typedef]================================================*/
 

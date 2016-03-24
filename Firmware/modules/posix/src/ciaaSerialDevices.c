@@ -43,6 +43,19 @@
 /** \addtogroup POSIX POSIX Implementation
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * JuCe         Juan Cecconi
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140525 v0.0.1 initials initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaSerialDevices.h"
 #include "ciaaPOSIX_stdio.h"
@@ -257,6 +270,12 @@ extern int32_t ciaaSerialDevices_ioctl(ciaaDevices_deviceType const * const devi
          }
          ret = 0;
          break;
+
+      case ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER:
+          cbuf = &serialDevice->rxBuf;
+          cbuf->head = 0;
+          cbuf->tail = 0;
+          break;
 
       default:
          ret = serialDevice->device->ioctl(device->loLayer, request, param);

@@ -44,6 +44,18 @@
 /** \addtogroup AIO Analog Input Output Drivers
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20141101 v0.0.1 initials initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaDriverAio.h"
 #include "ciaaDriverAio_Internal.h"

@@ -44,6 +44,18 @@
 /** \addtogroup AIO AIO Drivers
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * FB           Fernando Beunza
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140911 v0.0.1   FB first functional version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaDriverAio.h"
 #include "ciaaPOSIX_stdio.h"
@@ -183,7 +195,7 @@ static void ciaaDriverAio_adcIRQHandler(ciaaDevices_deviceType const * const dev
    Chip_ADC_Int_SetChannelCmd(pAioControl->adc_dac.adc.handler, pAioControl->channel, DISABLE);
    Chip_ADC_ReadValue(pAioControl->adc_dac.adc.handler, pAioControl->channel, &dataADC);
 
-   if ((pAioControl->cnt + sizeof(dataADC)) <= AIO_FIFO_SIZE)
+   if (pAioControl->cnt < AIO_FIFO_SIZE)
    {
       ptr = (uint16_t *) &(pAioControl->hwbuf[pAioControl->cnt]);
       *ptr = dataADC;

@@ -50,6 +50,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * KLi          Kang Li
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20090414 v0.1.7 MaCe fix optmization for NO_RES_SCHEDULER

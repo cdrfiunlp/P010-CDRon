@@ -43,6 +43,20 @@
 /** \addtogroup DIO DIO Drivers
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * PR           Pablo Ridolfi
+ * Apermingeat  Alejandro Permingeat
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140913 v0.0.1 MaCe first stub version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaDriverDio.h"
 #include "ciaaDriverDio_Internal.h"

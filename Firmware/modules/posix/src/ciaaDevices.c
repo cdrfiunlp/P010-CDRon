@@ -1,6 +1,8 @@
 /* Copyright 2014, ACSE & CADIEEL
  *    ACSE   : http://www.sase.com.ar/asociacion-civil-sistemas-embebidos/ciaa/
  *    CADIEEL: http://www.cadieel.org.ar
+ * Copyright 2015, Mariano Cerdeiro
+ * All rights reserved.
  *
  * This file is part of CIAA Firmware.
  *
@@ -41,6 +43,21 @@
 /** \addtogroup CIAA_Firmware CIAA Firmware
  ** @{ */
 /** \addtogroup POSIX POSIX Implementation
+ ** @{ */
+/*
+ * Initials     Name
+ * ---------------------------
+ * EzEs         Ezequiel Esposito
+ * MaCe         Mariano Cerdeiro
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20140503 v0.0.2 MaCe implement all functions
+ * 20140420 v0.0.1 EzEs initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaaDevices.h"
 #include "ciaaPOSIX_stdlib.h"
@@ -86,6 +103,25 @@ extern void ciaaDevices_addDevice(ciaaDevices_deviceType * device)
    {
       /* store the device in the list */
       ciaaDevices.device[ciaaDevices.position] = device;
+
+      /* increment the device position */
+      ciaaDevices.position++;
+   }
+
+   /* exit critical section */
+   /* not needed, only 1 task running */
+}
+
+extern void ciaaDevices_addDeviceGroup(ciaaDevices_deviceGroupType * device)
+{
+   /* enter critical section */
+   /* not needed, only 1 task running */
+
+   /* check if positions are empty for more devices */
+   if (ciaaDevices.position < (uint8_t)ciaaDevices_MAXDEVICES)
+   {
+      /* store the device in the list */
+      ciaaDevices.device[ciaaDevices.position] = (ciaaDevices_deviceType*)device;
 
       /* increment the device position */
       ciaaDevices.position++;

@@ -45,6 +45,18 @@
 /** \addtogroup Kernel CIAA Kernel
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ *
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * yyyymmdd v0.0.1 initials initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "ciaak_main.h"
 

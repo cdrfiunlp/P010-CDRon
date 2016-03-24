@@ -42,6 +42,19 @@
 /** \addtogroup PLC PLC Module
  ** @{ */
 
+/*
+ * Initials     Name
+ * ---------------------------
+ * ErPe         Eric Pernia
+ *
+ */
+
+/*
+ * modification history (new versions first)
+ * -----------------------------------------------------------
+ * 20120204 v0.0.1 ErPe initial version
+ */
+
 /*==================[inclusions]=============================================*/
 #include "PLC_IL_Instructions.h"
 

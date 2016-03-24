@@ -49,6 +49,13 @@
  ** @{ */
 
 /*
+ * Initials     Name
+ * ---------------------------
+ * MaCe         Mariano Cerdeiro
+ * KLi          Kang Li
+ */
+
+/*
  * modification history (new versions first)
  * -----------------------------------------------------------
  * 20090420 v0.1.4 MaCe correct AlarmBaseType members to lower cases
