@@ -79,10 +79,13 @@
 
 #define MODE_UNDEF -1
 #define MODE_CONFIG 0
+#define MODE_TEST 	1
+#define MODE_NORMAL 2
 
 /*==================[typedef]================================================*/
 struct status_struct{
 	int mode;
+	int wifiMode;
 };
 
 struct struct_motor{
@@ -93,6 +96,8 @@ struct WIFI_struct{
 	char SSID[20];
 	char password[20];
 	char IPaddress[20];
+	int activate;
+	int busy;
 };
 
 volatile struct IMU_struct{

@@ -144,8 +144,6 @@ void ErrorHook(void)
  */
 TASK(InitTask)
 {
-   int ret;
-   uint32_t outputs;
 
    /* init CIAA kernel and devices */
    ciaak_start();
@@ -179,6 +177,22 @@ TASK(IMUUpdate){
 		MPU6050_getData();
 		IMU.DRDY = 1;
 		TerminateTask();
+}
+
+TASK(wifiTask){
+	int32_t ret=0;      /* return value variable for posix calls  */
+
+	ciaaPOSIX_ioctl(fd_uartWIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+	if(ret > 0){
+		switch (status.mode){
+			case MODE_TEST:
+				if(WIFI.busy == 0) ActivateTask(Wifi_tst);
+				break;
+			case MODE_NORMAL:
+				break;
+		}
+	}
+	TerminateTask();
 }
 
 
@@ -255,7 +269,7 @@ int CDRon_initialization(void){
 		IMU.DRDY = 1;
 
 	   if(WIFI_init() != 0)
-		   	   ShutdownOS(0);
+		  ShutdownOS(0);
 
 
 }

@@ -6,8 +6,8 @@
 #include "os.h"               /* <= operating system header */
 
 /* Declaraciones externas */
-extern int32_t fd_i2c, fd_uartUSB;
-extern struct status_struct;
+extern int32_t fd_i2c, fd_uartUSB, fd_uartWIFI;
+
 extern struct status_struct status;
 
 extern struct struct_motor cfg_motor;
@@ -61,14 +61,20 @@ TASK(ConfigMode){
 					ActivateTask(Wifi_cfg);
 					break;
 				case 2:
+					status.mode = MODE_TEST;
 					ActivateTask(Motor_tst);
 					break;
 				case 3:
+					status.mode = MODE_TEST;
 					ActivateTask(IMU_tst);
 					break;
 				case 4:
+					status.mode = MODE_TEST;
+					if(WIFI_serverTCP() != -1){
+						ciaaPOSIX_write(fd_uartUSB, WIFI.IPaddress, ciaaPOSIX_strlen(WIFI.IPaddress));
+						SetRelAlarm(wifiPeriodicCheck,100,100);
+					}
 					break;
-
 				case 0:
 					ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
 					ShutdownOS(0);
@@ -147,6 +153,19 @@ TASK(IMU_tst){
 	ftoa (IMU.yaw,&str[ciaaPOSIX_strlen(str)], 2);
 	str[ciaaPOSIX_strlen(str)] = '\n';
 	ciaaPOSIX_write(fd_uartUSB, str, ciaaPOSIX_strlen(str));
+	TerminateTask();
+}
+
+TASK(Wifi_tst){
+	char buf[64];
+	WIFI.busy = 1;
+
+	ciaaPOSIX_read(fd_uartWIFI, buf, 64);
+	if (buf[0]== '+'){ // data in
+		WIFI_readData(buf);
+	}
+
+	WIFI.busy = 0;
 	TerminateTask();
 }
 

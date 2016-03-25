@@ -79,37 +79,19 @@ TASK StartupConfig {
     RESOURCE = POSIXR;
 }
 
-TASK ConfigMode {
-    PRIORITY = 2;		
-    ACTIVATION = 1;
-    STACK = 512;
-    TYPE = BASIC;
-    SCHEDULE = FULL;
+TASK wifiTask {
+	SCHEDULE = FULL;
+	TYPE = EXTENDED;
+	
+	ACTIVATION = 1;
+	PRIORITY = 4;
+	STACK = 512;
+
+	AUTOSTART = FALSE;
+	RESOURCE = POSIXR;
     EVENT = POSIXE;
-    RESOURCE = POSIXR;
 }
 
-
-TASK Wifi_cfg {
-    PRIORITY = 4;		
-    ACTIVATION = 1;
-    STACK = 512;
-    TYPE = BASIC;
-    SCHEDULE = FULL;
-    EVENT = POSIXE;
-    RESOURCE = POSIXR;
-}
-
-
-TASK Motor_tst {
-    PRIORITY = 4;		
-    ACTIVATION = 1;
-    STACK = 512;
-    TYPE = EXTENDED;
-    SCHEDULE = FULL;
-    EVENT = POSIXE;
-    RESOURCE = POSIXR;
-}
 
 TASK motorUpdate {
 	SCHEDULE = FULL;
@@ -139,6 +121,30 @@ TASK IMUUpdate {
     EVENT = POSIXE;
 }
 
+
+/*#################333 CONFIGURATION AND TESTING TASK ###########################*/
+
+TASK ConfigMode {
+    PRIORITY = 2;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = BASIC;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+TASK Wifi_cfg {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = BASIC;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+
 TASK IMU_tst {
     PRIORITY = 4;		
     ACTIVATION = 1;
@@ -149,6 +155,28 @@ TASK IMU_tst {
     RESOURCE = POSIXR;
 }
 
+TASK Wifi_tst {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+TASK Motor_tst {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+
+/*###################################################################*/
 
 TASK I2Cerror {
 	SCHEDULE = FULL;
@@ -167,6 +195,13 @@ ALARM ActivatePeriodicTask {
     COUNTER = Delayms;
     ACTION = ACTIVATETASK {
         TASK = I2Cerror;
+    }
+}
+
+ALARM wifiPeriodicCheck {
+    COUNTER = Delayms;
+    ACTION = ACTIVATETASK {
+        TASK = wifiTask;
     }
 }
 

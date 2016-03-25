@@ -77,6 +77,8 @@ int WIFI_init(void){
 	  char command[20] = {0};
 	  int ret = 0;
 
+	  WIFI.activate = 0;
+
 	  WIFI_configure();
 
 
@@ -92,6 +94,7 @@ int WIFI_init(void){
 	  if(WIFI_connectAP() != 0)
 		  return -1;
 
+	  WIFI.activate = 1;
 	  return 0;
 
 }
@@ -178,7 +181,7 @@ int WIFI_connectAP(void){
 
 	  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
 
-
+	  // Send: "AT+CWJAP="SSID","PASSWRD"\r\n
 	  ciaaPOSIX_strcpy(command,"AT+CWJAP=\"");
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(1);
@@ -192,16 +195,23 @@ int WIFI_connectAP(void){
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(1);
 	  ciaaPOSIX_strcpy(command,"\"\r\n");
-
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-	  CDRon_delayMs(4000);
-	  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
 
+
+	  CDRon_delayMs(2000);
+
+	  // Receive "OK"
+	  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
 	  if(strstr(buf,"OK")== NULL)
 		  return -1;
+
+	  //
 	  WIFI_sendCommand("AT\r\n","OK"); // Al configurar el dispositivo, tira mensajes de más
+	  // (VER)
 
 	  CDRon_delayMs(500);
+
+	  // Obtiene IP de conexión
 	  WIFI_getIP(buf);
 
 	  return 0;
@@ -219,6 +229,35 @@ void WIFI_getIP(char * buf){
 	strcpy(WIFI.IPaddress,buf);
 }
 
+int WIFI_serverTCP(void){
+	if(WIFI_sendCommand("AT+CIPMUX=1\r\n","OK") != 0)
+		return -1;
+	if(WIFI_sendCommand("AT+CIPSERVER=1","OK") != 0)
+		return -1;
+
+}
+
+int WIFI_readData(char* buf){
+	   char *ret;
+	   char temp[5];
+	   const char ch = ',';
+	   const char str[2] =":";
+	   int len,aux;
+
+
+	   ret = strstr(buf, "+IPD");
+	   if(ret != NULL){
+		   ret = strrchr(ret,ch);
+		   aux = strcspn(ret,str);
+		   strncpy(temp, ret+1, aux-1);
+		   len = strtol(temp,NULL,10);
+		   strncpy(buf, ret+aux+1, len);
+		   buf[len] = '\0';
+		   return 0;
+	   }
+
+	   return -1;
+}
 /****************************************************************/
 /**************** Funciones del MPU6050 *************************/
 /****************************************************************/
