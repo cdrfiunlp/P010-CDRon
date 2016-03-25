@@ -66,6 +66,8 @@ TASK(ConfigMode){
 				case 3:
 					ActivateTask(IMU_tst);
 					break;
+				case 4:
+					break;
 
 				case 0:
 					ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));

@@ -79,7 +79,7 @@ int WIFI_init(void){
 
 	  WIFI_configure();
 
-/*
+
 	  if(WIFI_sendCommand("AT\r\n","OK") != 0)
 		  return -1;
 	  if(WIFI_sendCommand("AT+CWMODE=1\r\n","OK") != 0)
@@ -88,8 +88,11 @@ int WIFI_init(void){
 		  return -1;
 
 	  CDRon_delayMs(1000);
-	  WIFI_connectAP();
-*/
+
+	  if(WIFI_connectAP() != 0)
+		  return -1;
+
+	  return 0;
 
 }
 
@@ -172,27 +175,36 @@ void WIFI_saveWIFI(void){
 int WIFI_connectAP(void){
 	  char command[50] = {0};
 	  char buf[64] = {0};
-	  //ciaaPOSIX_strcpy(command,"AT+CWJAP=\"");
+
+	  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
+
+
 	  ciaaPOSIX_strcpy(command,"AT+CWJAP=\"");
-	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command)-1);
+	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(1);
 	  ciaaPOSIX_strcpy(command,WIFI.SSID);
-	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command)-1);
+	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(1);
 	  ciaaPOSIX_strcpy(command,"\",\"");
-	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command)-1);
+	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(1);
 	  ciaaPOSIX_strcpy(command,WIFI.password);
-	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command)-1);
+	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(1);
 	  ciaaPOSIX_strcpy(command,"\"\r\n");
 
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(4000);
+	  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
 
+	  if(strstr(buf,"OK")== NULL)
+		  return -1;
 	  WIFI_sendCommand("AT\r\n","OK"); // Al configurar el dispositivo, tira mensajes de más
 
+	  CDRon_delayMs(500);
 	  WIFI_getIP(buf);
+
+	  return 0;
 }
 
 void WIFI_getIP(char * buf){

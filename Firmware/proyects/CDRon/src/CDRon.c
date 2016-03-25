@@ -246,15 +246,16 @@ int CDRon_initialization(void){
 	   CDRon_delayMs(100);
 
 	   /* initialization MPU6050 device */
-	   if(MPU6050_init() != 0)
-	      ShutdownOS(0);
+	   //if(MPU6050_init() != 0)
+	   //   ShutdownOS(0);
 
-	   if(MPU6050_initDMP()!= 0)
-	   	   ShutdownOS(0);
+	   //if(MPU6050_initDMP()!= 0)
+	   //	   ShutdownOS(0);
 
 		IMU.DRDY = 1;
 
-	   //WIFI_init();
+	   if(WIFI_init() != 0)
+		   	   ShutdownOS(0);
 
 
 }
