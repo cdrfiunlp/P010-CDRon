@@ -153,7 +153,7 @@ TASK(InitTask)
    CDRon_initialization();
 
    /* Activates startupConfigtasks */
-   ActivateTask(StartupConfig);
+   //ActivateTask(StartupConfig);
 
    /* terminate task */
    TerminateTask();
@@ -259,18 +259,18 @@ int CDRon_initialization(void){
 
 	   CDRon_delayMs(100);
 
+		IMU.DRDY = 0;
 	   /* initialization MPU6050 device */
-	   //if(MPU6050_init() != 0)
-	   //   ShutdownOS(0);
+	   if(MPU6050_init() == 0)
+		   if(MPU6050_initDMP()== 0)
+			   IMU.DRDY = 1;
 
-	   //if(MPU6050_initDMP()!= 0)
-	   //	   ShutdownOS(0);
 
-		IMU.DRDY = 1;
+	   WIFI.activate = 0;
+	   if(WIFI_init() == 0) // if OK WIFI.activation = 1 else = 0
+	   	   WIFI.activate = 1;
 
-	   if(WIFI_init() != 0)
-		  ShutdownOS(0);
-
+	   return 0;
 
 }
 

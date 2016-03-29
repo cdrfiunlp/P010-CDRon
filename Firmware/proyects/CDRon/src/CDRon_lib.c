@@ -77,8 +77,6 @@ int WIFI_init(void){
 	  char command[20] = {0};
 	  int ret = 0;
 
-	  WIFI.activate = 0;
-
 	  WIFI_configure();
 
 
@@ -89,12 +87,10 @@ int WIFI_init(void){
 	  if(WIFI_sendCommand("AT+RST\r\n","OK") != 0)
 		  return -1;
 
-	  CDRon_delayMs(1000);
+	  CDRon_delayMs(2000);
 
 	  if(WIFI_connectAP() != 0)
 		  return -1;
-
-	  WIFI.activate = 1;
 	  return 0;
 
 }
@@ -102,42 +98,56 @@ int WIFI_init(void){
 int WIFI_sendCommand(char * command, char * respond){
 	  char buf[64] = {0};
 	  uint8_t i;
+	  int32_t ret=0;      // return value variable for posix calls
 	  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
 
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 	  CDRon_delayMs(100);
-	  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
-	  if(strstr(buf,"busy")!= NULL){	// Si se encuentra ocupado, repetir luego de 1 s
-		  CDRon_delayMs(1000);
-		  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
-		  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-		  CDRon_delayMs(10);
-		  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
 
+	  ciaaPOSIX_ioctl(SERIAL_WIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+	  if(ret > 0){
+		  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
+		  if(strstr(buf,"busy")!= NULL){	// Si se encuentra ocupado, repetir luego de 1 s
+			  CDRon_delayMs(1000);
+			  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
+			  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+			  CDRon_delayMs(10);
+			  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
+
+		  }
+		  if(strstr(buf,respond)!= NULL)
+			  return 0;
 	  }
-	  if(strstr(buf,respond)!= NULL)
-		  return 0;
 	  return -1;
 
 }
 
 int WIFI_readStatus(char * command, char * buf){
 	  uint8_t i;
+	  int32_t ret=0;      // return value variable for posix calls
+
 	  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
 
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-	  CDRon_delayMs(10);
-	  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
-	  if(strstr(buf,"busy")!= NULL){	// Si se encuentra ocupado, repetir luego de 1 s
-		  CDRon_delayMs(1000);
-		  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
-		  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-		  CDRon_delayMs(10);
+	  CDRon_delayMs(500);
+	  ciaaPOSIX_ioctl(SERIAL_WIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+	  if(ret > 0){
 		  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
-		  if(strstr(buf,"busy")!= NULL)
-			  return -1;
+		  if(strstr(buf,"busy")!= NULL){	// Si se encuentra ocupado, repetir luego de 1 s
+			  CDRon_delayMs(1000);
+			  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
+			  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+			  CDRon_delayMs(500);
+			  ciaaPOSIX_ioctl(SERIAL_WIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+			  if(ret > 0){
+				  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
+				  if(strstr(buf,"busy")!= NULL)
+					  return -1;
+			  }
+		  }
+		  return 0;
 	  }
-	  return 0;
+	  return -1;
 }
 
 void WIFI_configure(void){
@@ -178,55 +188,65 @@ void WIFI_saveWIFI(void){
 int WIFI_connectAP(void){
 	  char command[50] = {0};
 	  char buf[64] = {0};
+	  char * aux;
+	  int32_t ret=0,i;      // return value variable for posix calls
 
+	  CDRon_delayMs(500);
 	  ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
 
 	  // Send: "AT+CWJAP="SSID","PASSWRD"\r\n
 	  ciaaPOSIX_strcpy(command,"AT+CWJAP=\"");
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-	  CDRon_delayMs(1);
+	  CDRon_delayMs(10);
 	  ciaaPOSIX_strcpy(command,WIFI.SSID);
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-	  CDRon_delayMs(1);
+	  CDRon_delayMs(10);
 	  ciaaPOSIX_strcpy(command,"\",\"");
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-	  CDRon_delayMs(1);
+	  CDRon_delayMs(10);
 	  ciaaPOSIX_strcpy(command,WIFI.password);
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
-	  CDRon_delayMs(1);
+	  CDRon_delayMs(10);
 	  ciaaPOSIX_strcpy(command,"\"\r\n");
 	  ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
 
+	  for(i=0;i<6;i++){
+			CDRon_delayMs(1000);
+			if(WIFI_readStatus("AT\r\n",buf)==0) break;
+			if (i==5) return -1;
 
-	  CDRon_delayMs(2000);
+	  }
 
-	  // Receive "OK"
-	  ciaaPOSIX_read(SERIAL_WIFI, buf, 64);
-	  if(strstr(buf,"OK")== NULL)
-		  return -1;
-
-	  //
-	  WIFI_sendCommand("AT\r\n","OK"); // Al configurar el dispositivo, tira mensajes de más
-	  // (VER)
-
-	  CDRon_delayMs(500);
-
+	  //CDRon_delayMs(1000);
 	  // Obtiene IP de conexión
-	  WIFI_getIP(buf);
-
+	  if(WIFI_getIP(buf)!= 0)
+		  return -1;
 	  return 0;
 }
 
-void WIFI_getIP(char * buf){
+int WIFI_getIP(char * buf){
 	uint8_t len;
+	CDRon_delayMs(100);
 	WIFI_readStatus("AT+CIFSR\r\n",buf);
+	if(strstr(buf,"busy")!= NULL){	// Si se encuentra ocupado, repetir luego de 1 s
+	  CDRon_delayMs(1000);
+	  WIFI_readStatus("AT+CIFSR\r\n",buf);
+	  if(strstr(buf,"busy")!= NULL)
+		  return -1;
+	}
 	buf = strstr(buf,"STAIP");
+	if (buf == NULL)
+			return -1;
 	buf = strstr(buf,"\"");
 	len =strcspn(&buf[1], "\"");
 	strncpy(buf, &buf[1], len);
 	buf[len] = '\0';
 
 	strcpy(WIFI.IPaddress,buf);
+
+	if (!strcmp(buf,"0.0.0.0"))
+		return -1;
+	return 0;
 }
 
 int WIFI_serverTCP(void){
