@@ -252,7 +252,7 @@ int WIFI_getIP(char * buf){
 int WIFI_serverTCP(void){
 	if(WIFI_sendCommand("AT+CIPMUX=1\r\n","OK") != 0)
 		return -1;
-	if(WIFI_sendCommand("AT+CIPSERVER=1","OK") != 0)
+	if(WIFI_sendCommand("AT+CIPSERVER=1\r\n","OK") != 0)
 		return -1;
 
 }
@@ -264,7 +264,6 @@ int WIFI_readData(char* buf){
 	   const char str[2] =":";
 	   int len,aux;
 
-
 	   ret = strstr(buf, "+IPD");
 	   if(ret != NULL){
 		   ret = strrchr(ret,ch);
@@ -274,9 +273,72 @@ int WIFI_readData(char* buf){
 		   strncpy(buf, ret+aux+1, len);
 		   buf[len] = '\0';
 		   return 0;
+	   } else if (ret = strstr(buf, "CONNECT")){
+		   ret = ret - 1;
+		   len = strtol(&ret[-1],NULL,10);
+		   WIFI.clientID = len;
+		   return 1;
 	   }
 
+
+
+
 	   return -1;
+}
+
+int WIFI_sendData(char* buf,int len){
+	  char command[50] = {0};
+	  int32_t ret;
+	  char* receive;
+
+	if (WIFI.clientID == -1) return -1;
+
+	// SEND: AT+CIPSEND=<id>,<lenght>\r\n
+	ciaaPOSIX_ioctl(SERIAL_WIFI,(int32_t) ciaaPOSIX_IOCTL_CLEAR_RX_BUFFER, 0);
+
+	ciaaPOSIX_strcpy(command,"AT+CIPSEND=");
+	ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+
+	CDRon_delayMs(10);
+	command[0] = WIFI.clientID + 48;	// int to string
+	command[1] = ',';
+    command[2] = '\0';
+	ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+
+	CDRon_delayMs(10);
+	itoa(len,command,10);
+	ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+
+	CDRon_delayMs(10);
+	ciaaPOSIX_strcpy(command,"\r\n");
+	ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+
+	CDRon_delayMs(10);
+
+	// if receive ">" => send buf
+	ciaaPOSIX_ioctl(SERIAL_WIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+	if(ret > 0){
+		ciaaPOSIX_read(SERIAL_WIFI, command, 64);
+
+		receive = strstr(command, ">");
+		if(receive != NULL){
+			ciaaPOSIX_strcpy(command,buf);
+			ciaaPOSIX_write(SERIAL_WIFI, command, ciaaPOSIX_strlen(command));
+
+			CDRon_delayMs(10);
+
+			// if receive "OK" => send complete
+			ciaaPOSIX_ioctl(SERIAL_WIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
+			if(ret > 0){
+				ciaaPOSIX_read(SERIAL_WIFI, command, 64);
+				receive = strstr(command, "SEND OK");
+				if(receive != NULL) return 0;
+			}
+		}
+
+	}
+
+    return -1;
 }
 /****************************************************************/
 /**************** Funciones del MPU6050 *************************/

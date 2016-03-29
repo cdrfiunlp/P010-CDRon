@@ -153,7 +153,7 @@ TASK(InitTask)
    CDRon_initialization();
 
    /* Activates startupConfigtasks */
-   //ActivateTask(StartupConfig);
+   ActivateTask(StartupConfig);
 
    /* terminate task */
    TerminateTask();

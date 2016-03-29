@@ -70,8 +70,11 @@ TASK(ConfigMode){
 					break;
 				case 4:
 					status.mode = MODE_TEST;
+					WIFI.clientID = -1;
 					if(WIFI_serverTCP() != -1){
 						ciaaPOSIX_write(fd_uartUSB, WIFI.IPaddress, ciaaPOSIX_strlen(WIFI.IPaddress));
+						CDRon_delayMs(1);
+						ciaaPOSIX_write(fd_uartUSB, "\n", ciaaPOSIX_strlen("\n"));
 						SetRelAlarm(wifiPeriodicCheck,100,100);
 					}
 					break;
@@ -102,7 +105,6 @@ TASK(Wifi_cfg){
 		strncpy(WIFI.SSID,buf,len);
 		chr = strchr(buf,':');
 		strcpy(WIFI.password, &chr[1]);
-
 
 	}
 	ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
@@ -161,8 +163,15 @@ TASK(Wifi_tst){
 	WIFI.busy = 1;
 
 	ciaaPOSIX_read(fd_uartWIFI, buf, 64);
-	if (buf[0]== '+'){ // data in
-		WIFI_readData(buf);
+
+	switch (WIFI_readData(buf)){
+		case 0:
+			break;
+		case 1:
+			WIFI_sendData("OK\n",ciaaPOSIX_strlen("OK\n"));
+			break;
+		case -1:
+			break;
 	}
 
 	WIFI.busy = 0;

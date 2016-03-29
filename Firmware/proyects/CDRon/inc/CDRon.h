@@ -98,6 +98,7 @@ struct WIFI_struct{
 	char IPaddress[20];
 	int activate;
 	int busy;
+	int clientID;
 };
 
 volatile struct IMU_struct{
