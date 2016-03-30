@@ -64,8 +64,8 @@ TASK InitTask {
     STACK = 512;
     TYPE = BASIC;
     SCHEDULE = NON;
+    RESOURCE = BRUSHLESSR
     RESOURCE = POSIXR;
-    RESOURCE = MOTOR;
     EVENT = POSIXE;
 }
 
@@ -79,39 +79,7 @@ TASK StartupConfig {
     RESOURCE = POSIXR;
 }
 
-TASK ConfigMode {
-    PRIORITY = 2;		
-    ACTIVATION = 1;
-    STACK = 512;
-    TYPE = BASIC;
-    SCHEDULE = FULL;
-    EVENT = POSIXE;
-    RESOURCE = POSIXR;
-}
-
-
-TASK Wifi_cfg {
-    PRIORITY = 4;		
-    ACTIVATION = 1;
-    STACK = 512;
-    TYPE = BASIC;
-    SCHEDULE = FULL;
-    EVENT = POSIXE;
-    RESOURCE = POSIXR;
-}
-
-
-TASK Motor_tst {
-    PRIORITY = 4;		
-    ACTIVATION = 1;
-    STACK = 512;
-    TYPE = EXTENDED;
-    SCHEDULE = FULL;
-    EVENT = POSIXE;
-    RESOURCE = POSIXR;
-}
-
-TASK motorUpdate {
+TASK wifiTask {
 	SCHEDULE = FULL;
 	TYPE = EXTENDED;
 	
@@ -119,7 +87,20 @@ TASK motorUpdate {
 	PRIORITY = 4;
 	STACK = 512;
 
-	EVENT = UPDATEMOTOR;
+	AUTOSTART = FALSE;
+	RESOURCE = POSIXR;
+    EVENT = POSIXE;
+}
+
+
+TASK brushlUpdate {
+	SCHEDULE = FULL;
+	TYPE = EXTENDED;
+	
+	ACTIVATION = 1;
+	PRIORITY = 4;
+	STACK = 512;
+
 	AUTOSTART = FALSE;
 	RESOURCE = POSIXR;
     EVENT = POSIXE;
@@ -133,11 +114,34 @@ TASK IMUUpdate {
 	PRIORITY = 4;
 	STACK = 512;
 
-	EVENT = UPDATEIMU;
 	AUTOSTART = FALSE;
 	RESOURCE = POSIXR;
     EVENT = POSIXE;
 }
+
+
+/*#################333 CONFIGURATION AND TESTING TASK ###########################*/
+
+TASK ConfigMode {
+    PRIORITY = 2;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = BASIC;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+TASK Wifi_cfg {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = BASIC;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
 
 TASK IMU_tst {
     PRIORITY = 4;		
@@ -149,6 +153,28 @@ TASK IMU_tst {
     RESOURCE = POSIXR;
 }
 
+TASK Wifi_tst {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+TASK Brushless_tst {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
+
+/*###################################################################*/
 
 TASK I2Cerror {
 	SCHEDULE = FULL;
@@ -170,11 +196,16 @@ ALARM ActivatePeriodicTask {
     }
 }
 
+ALARM wifiPeriodicCheck {
+    COUNTER = Delayms;
+    ACTION = ACTIVATETASK {
+        TASK = wifiTask;
+    }
+}
+
 RESOURCE = POSIXR;
-RESOURCE = MOTOR;
+RESOURCE = BRUSHLESSR;
 EVENT = POSIXE;
-EVENT = UPDATEMOTOR;
-EVENT = UPDATEIMU;
 
 APPMODE = AppMode1;
 

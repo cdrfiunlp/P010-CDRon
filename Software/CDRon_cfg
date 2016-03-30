@@ -10,6 +10,9 @@ from modules.CDRon_cfgWifi import configure_wifi
 from modules.CDRon_tstMotors import tst_motors
 from modules.CDRon_shutdown import shutdown
 from modules.CDRon_tstimu import tst_imu
+from modules.CDRon_tstwifi import tst_wifi
+
+
 global code
 code = 0
  
@@ -74,10 +77,10 @@ else:
 
 menu = {}
 menu['1']="Configure WIFI." 
-menu['2']="TEST MODE for motors (Change % duty)"
-menu['3']="TEST MODE for IMU (Read data)"
-menu['4']="TEST MODE for WIFI (Read IMU & change % duty)"
-menu['0']="Exit"
+menu['2']="TEST MODE for motors."
+menu['3']="TEST MODE for IMU."
+menu['4']="TEST MODE for WIFI."
+menu['0']="Exit."
 
 while True: 
   options=menu.keys()
@@ -100,9 +103,11 @@ while True:
   elif selection == '2':
       tst_motors(fd_serial) 
   elif selection == '3': 
-      tst_imu(fd_serial)    	
+      tst_imu(fd_serial)
+  elif selection == '4':
+      tst_wifi(fd_serial)		
   else: 
-      print "Unknown Option Selected!" 
+      print "Unknown option selected!" 
 
 # Cerrando puerto serial
 fd_serial.close()
