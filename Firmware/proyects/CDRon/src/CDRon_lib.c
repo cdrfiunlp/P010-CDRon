@@ -254,6 +254,7 @@ int WIFI_serverTCP(void){
 		return -1;
 	if(WIFI_sendCommand("AT+CIPSERVER=1\r\n","OK") != 0)
 		return -1;
+	WIFI.clientID = -1;
 
 }
 

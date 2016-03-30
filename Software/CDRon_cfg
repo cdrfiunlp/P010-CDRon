@@ -10,6 +10,9 @@ from modules.CDRon_cfgWifi import configure_wifi
 from modules.CDRon_tstMotors import tst_motors
 from modules.CDRon_shutdown import shutdown
 from modules.CDRon_tstimu import tst_imu
+from modules.CDRon_tstwifi import tst_wifi
+
+
 global code
 code = 0
  
@@ -100,7 +103,9 @@ while True:
   elif selection == '2':
       tst_motors(fd_serial) 
   elif selection == '3': 
-      tst_imu(fd_serial)    	
+      tst_imu(fd_serial)
+  elif selection == '4':
+      tst_wifi(fd_serial)		
   else: 
       print "Unknown Option Selected!" 
 

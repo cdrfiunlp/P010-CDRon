@@ -51,6 +51,7 @@ TASK(ConfigMode){
 	char buf[64]={0};   /* buffer for uart operation (modificado en ciaaDriverUart.c    */
 	int32_t ret=0;      /* return value variable for posix calls  */
 
+	WIFI.clientID = -2;
 	while(1){
 		ciaaPOSIX_ioctl(fd_uartUSB, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
 		if(ret > 0){
@@ -70,13 +71,15 @@ TASK(ConfigMode){
 					break;
 				case 4:
 					status.mode = MODE_TEST;
-					WIFI.clientID = -1;
-					if(WIFI_serverTCP() != -1){
-						ciaaPOSIX_write(fd_uartUSB, WIFI.IPaddress, ciaaPOSIX_strlen(WIFI.IPaddress));
-						CDRon_delayMs(1);
-						ciaaPOSIX_write(fd_uartUSB, "\n", ciaaPOSIX_strlen("\n"));
-						SetRelAlarm(wifiPeriodicCheck,100,100);
-					}
+					if(WIFI.clientID == -2)
+						if(WIFI_serverTCP() != -1)
+							SetRelAlarm(wifiPeriodicCheck,100,100);
+						else
+							break;
+					ciaaPOSIX_write(fd_uartUSB, WIFI.IPaddress, ciaaPOSIX_strlen(WIFI.IPaddress));
+					CDRon_delayMs(1);
+					ciaaPOSIX_write(fd_uartUSB, "\n", ciaaPOSIX_strlen("\n"));
+
 					break;
 				case 0:
 					ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
@@ -159,6 +162,9 @@ TASK(IMU_tst){
 }
 
 TASK(Wifi_tst){
+	char* chr;
+	int index,i;
+	double duty;
 	char buf[64];
 	WIFI.busy = 1;
 
@@ -166,6 +172,25 @@ TASK(Wifi_tst){
 
 	switch (WIFI_readData(buf)){
 		case 0:
+			if(strstr(buf, "motor\n") != NULL){
+				chr = &buf[ciaaPOSIX_strlen("motor\n")];
+				// refresh duty
+				duty= AUX_sstr2float(chr);
+				for(i=0;i<3;i++){
+					chr = strchr(chr,':');
+					if (chr != NULL){
+						chr[0] = ' ';
+						index = chr[1] - 48; //Conver to number
+						cfg_motor.PWMduty[index-1] = duty;
+					}
+				}
+				// change task
+				WIFI_sendData("OK\n",ciaaPOSIX_strlen("OK\n"));
+				WIFI.busy = 0;
+				ChainTask(motorUpdate);
+			} else if(strstr(buf, "motor\n") != NULL)
+				WIFI.clientID = -1;
+
 			break;
 		case 1:
 			WIFI_sendData("OK\n",ciaaPOSIX_strlen("OK\n"));
