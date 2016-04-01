@@ -1,0 +1,18 @@
+Added Component: Designator=P2(ESC)
+Added Component: Designator=P3(ESC)
+Added Component: Designator=P4(ESC)
+Added Component: Designator=P5(ESC)
+Added Pin To Net: NetName=VCC Pin=P2-1
+Added Pin To Net: NetName=GND Pin=P2-2
+Added Pin To Net: NetName=T_COL1 Pin=P2-3
+Added Pin To Net: NetName=GND Pin=P3-2
+Added Pin To Net: NetName=T_FIL2 Pin=P3-3
+Added Pin To Net: NetName=GND Pin=P4-2
+Added Pin To Net: NetName=T_FIL3 Pin=P4-3
+Added Pin To Net: NetName=W5V Pin=P5-1
+Added Pin To Net: NetName=GND Pin=P5-2
+Added Pin To Net: NetName=F_COL0 Pin=P5-3
+Added Member To Class: ClassName=CDRon_brushless Member=Component P2 ESC
+Added Member To Class: ClassName=CDRon_brushless Member=Component P3 ESC
+Added Member To Class: ClassName=CDRon_brushless Member=Component P4 ESC
+Added Member To Class: ClassName=CDRon_brushless Member=Component P5 ESC

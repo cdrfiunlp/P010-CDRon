@@ -1,0 +1,180 @@
+Removed Pin From Net: NetName=3V3 Pin=*-1
+Removed Pin From Net: NetName=5V Pin=*-2
+Removed Pin From Net: NetName=RESET Pin=*-3
+Removed Pin From Net: NetName=GNDA Pin=*-4
+Removed Pin From Net: NetName=ISP Pin=*-5
+Removed Pin From Net: NetName=WAKEUP Pin=*-6
+Removed Pin From Net: NetName=GNDA Pin=*-7
+Removed Pin From Net: NetName=GNDA Pin=*-8
+Removed Pin From Net: NetName=CH3 Pin=*-9
+Removed Pin From Net: NetName=GNDA Pin=*-10
+Removed Pin From Net: NetName=CH2 Pin=*-11
+Removed Pin From Net: NetName=GNDA Pin=*-12
+Removed Pin From Net: NetName=CH1 Pin=*-13
+Removed Pin From Net: NetName=GNDA Pin=*-14
+Removed Pin From Net: NetName=DAC Pin=*-15
+Removed Pin From Net: NetName=GNDA Pin=*-16
+Removed Pin From Net: NetName=VDDA Pin=*-17
+Removed Pin From Net: NetName=GNDA Pin=*-18
+Removed Pin From Net: NetName=I2C_SDA Pin=*-19
+Removed Pin From Net: NetName=GND Pin=*-20
+Removed Pin From Net: NetName=I2C_SCL Pin=*-21
+Removed Pin From Net: NetName=GND Pin=*-22
+Removed Pin From Net: NetName=232_RX Pin=*-23
+Removed Pin From Net: NetName=GND Pin=*-24
+Removed Pin From Net: NetName=232_TX Pin=*-25
+Removed Pin From Net: NetName=GND Pin=*-26
+Removed Pin From Net: NetName=CAN_RD Pin=*-27
+Removed Pin From Net: NetName=GND Pin=*-28
+Removed Pin From Net: NetName=CAN_TD Pin=*-29
+Removed Pin From Net: NetName=GND Pin=*-30
+Removed Pin From Net: NetName=T_COL1 Pin=*-31
+Removed Pin From Net: NetName=GND Pin=*-32
+Removed Pin From Net: NetName=T_FIL0 Pin=*-33
+Removed Pin From Net: NetName=T_COL2 Pin=*-34
+Removed Pin From Net: NetName=T_FIL3 Pin=*-35
+Removed Pin From Net: NetName=T_FIL1 Pin=*-36
+Removed Pin From Net: NetName=T_FIL2 Pin=*-37
+Removed Pin From Net: NetName=GND Pin=*-38
+Removed Pin From Net: NetName=F_COL0 Pin=*-39
+Removed Pin From Net: NetName=GND Pin=*-40
+Removed Member From Class: ClassName=CDRon_mainSheet Member=*
+Added Component: Designator=C3(C 1206)
+Added Component: Designator=P1(HDR1X4)
+Added Component: Designator=P6(GY-521)
+Added Component: Designator=U1(EDU-CIAA)
+Added Component: Designator=U2(TI-DBV5_N)
+Added Component: Designator=W1(ESP8266)
+Added Pin To Net: NetName=GND Pin=C3-2
+Added Pin To Net: NetName=GNDA Pin=P1-1
+Added Pin To Net: NetName=CH1 Pin=P1-2
+Added Pin To Net: NetName=CH2 Pin=P1-3
+Added Pin To Net: NetName=CH3 Pin=P1-4
+Added Pin To Net: NetName=GND Pin=P6-2
+Added Pin To Net: NetName=I2C_SCL Pin=P6-3
+Added Pin To Net: NetName=I2C_SDA Pin=P6-4
+Added Pin To Net: NetName=3V3 Pin=U1-1
+Added Pin To Net: NetName=5V Pin=U1-2
+Added Pin To Net: NetName=RESET Pin=U1-3
+Added Pin To Net: NetName=ISP Pin=U1-5
+Added Pin To Net: NetName=WAKEUP Pin=U1-6
+Added Pin To Net: NetName=CH3 Pin=U1-9
+Added Pin To Net: NetName=CH2 Pin=U1-11
+Added Pin To Net: NetName=CH1 Pin=U1-13
+Added Pin To Net: NetName=DAC Pin=U1-15
+Added Pin To Net: NetName=VDDA Pin=U1-17
+Added Pin To Net: NetName=I2C_SDA Pin=U1-19
+Added Pin To Net: NetName=GND Pin=U1-20
+Added Pin To Net: NetName=I2C_SCL Pin=U1-21
+Added Pin To Net: NetName=GND Pin=U1-22
+Added Pin To Net: NetName=232_RX Pin=U1-23
+Added Pin To Net: NetName=GND Pin=U1-24
+Added Pin To Net: NetName=232_TX Pin=U1-25
+Added Pin To Net: NetName=GND Pin=U1-26
+Added Pin To Net: NetName=CAN_RD Pin=U1-27
+Added Pin To Net: NetName=GND Pin=U1-28
+Added Pin To Net: NetName=CAN_TD Pin=U1-29
+Added Pin To Net: NetName=GND Pin=U1-30
+Added Pin To Net: NetName=T_COL1 Pin=U1-31
+Added Pin To Net: NetName=GND Pin=U1-32
+Added Pin To Net: NetName=T_FIL0 Pin=U1-33
+Added Pin To Net: NetName=T_COL2 Pin=U1-34
+Added Pin To Net: NetName=T_FIL3 Pin=U1-35
+Added Pin To Net: NetName=T_FIL1 Pin=U1-36
+Added Pin To Net: NetName=T_FIL2 Pin=U1-37
+Added Pin To Net: NetName=GND Pin=U1-38
+Added Pin To Net: NetName=F_COL0 Pin=U1-39
+Added Pin To Net: NetName=GND Pin=U1-40
+Added Pin To Net: NetName=3V3 Pin=U1-41
+Added Pin To Net: NetName=5V Pin=U1-42
+Added Pin To Net: NetName=GND Pin=U1-43
+Added Pin To Net: NetName=GND Pin=U1-45
+Added Pin To Net: NetName=GND Pin=U1-47
+Added Pin To Net: NetName=GND Pin=U1-51
+Added Pin To Net: NetName=GND Pin=U1-53
+Added Pin To Net: NetName=GND Pin=U1-57
+Added Pin To Net: NetName=GND Pin=U1-59
+Added Pin To Net: NetName=GND Pin=U1-65
+Added Pin To Net: NetName=GND Pin=U1-67
+Added Pin To Net: NetName=GND Pin=U1-77
+Added Pin To Net: NetName=GND Pin=U1-79
+Added Pin To Net: NetName=GND Pin=U1-82
+Added Pin To Net: NetName=GND Pin=U2-2
+Added Pin To Net: NetName=232_TX Pin=W1-1
+Added Pin To Net: NetName=GND Pin=W1-2
+Added Pin To Net: NetName=232_RX Pin=W1-8
+Added Pin To Net: NetName=CRS_DV Pin=U1-50
+Added Net: Name=CRS_DV
+Added Pin To Net: NetName=GPIO0 Pin=U1-69
+Added Net: Name=GPIO0
+Added Pin To Net: NetName=GPIO1 Pin=U1-72
+Added Net: Name=GPIO1
+Added Pin To Net: NetName=GPIO2 Pin=U1-71
+Added Net: Name=GPIO2
+Added Pin To Net: NetName=GPIO3 Pin=U1-74
+Added Net: Name=GPIO3
+Added Pin To Net: NetName=GPIO4 Pin=U1-73
+Added Net: Name=GPIO4
+Added Pin To Net: NetName=GPIO5 Pin=U1-76
+Added Net: Name=GPIO5
+Added Pin To Net: NetName=GPIO6 Pin=U1-75
+Added Net: Name=GPIO6
+Added Pin To Net: NetName=GPIO7 Pin=U1-78
+Added Net: Name=GPIO7
+Added Pin To Net: NetName=GPIO8 Pin=P6-8
+Added Pin To Net: NetName=GPIO8 Pin=U1-80
+Added Net: Name=GPIO8
+Added Pin To Net: NetName=LCD1 Pin=U1-70
+Added Net: Name=LCD1
+Added Pin To Net: NetName=LCD2 Pin=U1-68
+Added Net: Name=LCD2
+Added Pin To Net: NetName=LCD3 Pin=U1-66
+Added Net: Name=LCD3
+Added Pin To Net: NetName=LCD4 Pin=U1-62
+Added Net: Name=LCD4
+Added Pin To Net: NetName=LCD_EN Pin=U1-63
+Added Net: Name=LCD_EN
+Added Pin To Net: NetName=LCD_RS Pin=U1-64
+Added Net: Name=LCD_RS
+Added Pin To Net: NetName=MDC Pin=U1-48
+Added Net: Name=MDC
+Added Pin To Net: NetName=MDIO Pin=U1-52
+Added Net: Name=MDIO
+Added Pin To Net: NetName=NetC3_1 Pin=C3-1
+Added Pin To Net: NetName=NetC3_1 Pin=U2-4
+Added Net: Name=NetC3_1
+Added Pin To Net: NetName=REF_CLK Pin=U1-55
+Added Net: Name=REF_CLK
+Added Pin To Net: NetName=RXD0 Pin=U1-49
+Added Net: Name=RXD0
+Added Pin To Net: NetName=RXD1 Pin=U1-44
+Added Net: Name=RXD1
+Added Pin To Net: NetName=SPI_CLK Pin=U1-60
+Added Net: Name=SPI_CLK
+Added Pin To Net: NetName=SPI_MISO Pin=U1-58
+Added Net: Name=SPI_MISO
+Added Pin To Net: NetName=SPI_MOSI Pin=U1-61
+Added Net: Name=SPI_MOSI
+Added Pin To Net: NetName=TX_EN Pin=U1-46
+Added Net: Name=TX_EN
+Added Pin To Net: NetName=TXD0 Pin=U1-54
+Added Net: Name=TXD0
+Added Pin To Net: NetName=TXD1 Pin=U1-56
+Added Net: Name=TXD1
+Added Pin To Net: NetName=VCC Pin=P6-1
+Added Pin To Net: NetName=VCC Pin=U1-81
+Added Net: Name=VCC
+Added Pin To Net: NetName=W3V3 Pin=U2-5
+Added Pin To Net: NetName=W3V3 Pin=W1-3
+Added Pin To Net: NetName=W3V3 Pin=W1-7
+Added Net: Name=W3V3
+Added Pin To Net: NetName=W5V Pin=U2-1
+Added Pin To Net: NetName=W5V Pin=U2-3
+Added Net: Name=W5V
+Added Class: Name=CDRon_brushless
+Added Class: Name=CDRon_IMU-BAT
+Added Class: Name=CDRon_wifi
+Added Member To Class: ClassName=CDRon_mainSheet Member=Component U1 EDU-CIAA
+Added Room: Name=CDRon_brushless
+Added Room: Name=CDRon_IMU-BAT
+Added Room: Name=CDRon_wifi

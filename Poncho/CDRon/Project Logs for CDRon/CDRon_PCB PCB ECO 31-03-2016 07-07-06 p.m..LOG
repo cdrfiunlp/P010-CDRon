@@ -1,0 +1,40 @@
+Added Pin To Net: NetName=3V3 Pin=*-1
+Added Net: Name=3V3
+Added Pin To Net: NetName=232_RX Pin=*-23
+Added Net: Name=232_RX
+Added Pin To Net: NetName=232_TX Pin=*-25
+Added Net: Name=232_TX
+Added Pin To Net: NetName=CAN_RD Pin=*-27
+Added Net: Name=CAN_RD
+Added Pin To Net: NetName=CAN_TD Pin=*-29
+Added Net: Name=CAN_TD
+Added Pin To Net: NetName=CH1 Pin=*-13
+Added Net: Name=CH1
+Added Pin To Net: NetName=CH2 Pin=*-11
+Added Net: Name=CH2
+Added Pin To Net: NetName=CH3 Pin=*-9
+Added Net: Name=CH3
+Added Pin To Net: NetName=DAC Pin=*-15
+Added Net: Name=DAC
+Added Pin To Net: NetName=F_COL0 Pin=*-39
+Added Net: Name=F_COL0
+Added Pin To Net: NetName=GNDA Pin=*-7
+Added Net: Name=GNDA
+Added Pin To Net: NetName=I2C_SCL Pin=*-21
+Added Net: Name=I2C_SCL
+Added Pin To Net: NetName=I2C_SDA Pin=*-19
+Added Net: Name=I2C_SDA
+Added Pin To Net: NetName=ISP Pin=*-5
+Added Net: Name=ISP
+Added Pin To Net: NetName=RESET Pin=*-3
+Added Net: Name=RESET
+Added Pin To Net: NetName=T_COL1 Pin=*-31
+Added Net: Name=T_COL1
+Added Pin To Net: NetName=T_FIL0 Pin=*-33
+Added Net: Name=T_FIL0
+Added Pin To Net: NetName=T_FIL2 Pin=*-37
+Added Net: Name=T_FIL2
+Added Pin To Net: NetName=T_FIL3 Pin=*-35
+Added Net: Name=T_FIL3
+Added Pin To Net: NetName=VDDA Pin=*-17
+Added Net: Name=VDDA

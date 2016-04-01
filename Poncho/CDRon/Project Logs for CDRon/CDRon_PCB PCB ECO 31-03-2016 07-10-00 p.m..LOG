@@ -1,0 +1,25 @@
+Added Pin To Net: NetName=GNDA Pin=*-4
+Added Pin To Net: NetName=GNDA Pin=*-8
+Added Pin To Net: NetName=GNDA Pin=*-10
+Added Pin To Net: NetName=GNDA Pin=*-12
+Added Pin To Net: NetName=GNDA Pin=*-14
+Added Pin To Net: NetName=GNDA Pin=*-16
+Added Pin To Net: NetName=GNDA Pin=*-18
+Added Pin To Net: NetName=5V Pin=*-2
+Added Net: Name=5V
+Added Pin To Net: NetName=GND Pin=*-20
+Added Pin To Net: NetName=GND Pin=*-22
+Added Pin To Net: NetName=GND Pin=*-24
+Added Pin To Net: NetName=GND Pin=*-26
+Added Pin To Net: NetName=GND Pin=*-28
+Added Pin To Net: NetName=GND Pin=*-30
+Added Pin To Net: NetName=GND Pin=*-32
+Added Pin To Net: NetName=GND Pin=*-38
+Added Pin To Net: NetName=GND Pin=*-40
+Added Net: Name=GND
+Added Pin To Net: NetName=T_COL2 Pin=*-34
+Added Net: Name=T_COL2
+Added Pin To Net: NetName=T_FIL1 Pin=*-36
+Added Net: Name=T_FIL1
+Added Pin To Net: NetName=WAKEUP Pin=*-6
+Added Net: Name=WAKEUP

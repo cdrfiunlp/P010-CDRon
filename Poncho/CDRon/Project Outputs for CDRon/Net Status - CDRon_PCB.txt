@@ -1,0 +1,64 @@
+Net Status Report
+Filename     : C:\Users\Jorge\Git\P010-CDRon\Poncho\CDRon\CDRon_PCB.PcbDoc
+Date         : 31/03/2016
+Time         : 11:25:46 p.m.
+Time Elapsed : 00:00:01
+
+Nets, Layer, Length
+    232_RX, Signal Layers Only, 0mils
+    232_TX, Signal Layers Only, 0mils
+    3V3, Signal Layers Only, 0mils
+    5V, Signal Layers Only, 0mils
+    CAN_RD, Signal Layers Only, 0mils
+    CAN_TD, Signal Layers Only, 0mils
+    CH1, Signal Layers Only, 0mils
+    CH2, Signal Layers Only, 0mils
+    CH3, Signal Layers Only, 0mils
+    CRS_DV, Signal Layers Only, 0mils
+    DAC, Signal Layers Only, 0mils
+    F_COL0, Signal Layers Only, 0mils
+    GND, Signal Layers Only, 0mils
+    GNDA, Signal Layers Only, 0mils
+    GPIO0, Signal Layers Only, 0mils
+    GPIO1, Signal Layers Only, 0mils
+    GPIO2, Signal Layers Only, 0mils
+    GPIO3, Signal Layers Only, 0mils
+    GPIO4, Signal Layers Only, 0mils
+    GPIO5, Signal Layers Only, 0mils
+    GPIO6, Signal Layers Only, 0mils
+    GPIO7, Signal Layers Only, 0mils
+    GPIO8, Signal Layers Only, 0mils
+    I2C_SCL, Signal Layers Only, 0mils
+    I2C_SDA, Signal Layers Only, 0mils
+    ISP, Signal Layers Only, 0mils
+    LCD1, Signal Layers Only, 0mils
+    LCD2, Signal Layers Only, 0mils
+    LCD3, Signal Layers Only, 0mils
+    LCD4, Signal Layers Only, 0mils
+    LCD_EN, Signal Layers Only, 0mils
+    LCD_RS, Signal Layers Only, 0mils
+    MDC, Signal Layers Only, 0mils
+    MDIO, Signal Layers Only, 0mils
+    NetC3_1, Signal Layers Only, 0mils
+    REF_CLK, Signal Layers Only, 0mils
+    RESET, Signal Layers Only, 0mils
+    RXD0, Signal Layers Only, 0mils
+    RXD1, Signal Layers Only, 0mils
+    SPI_CLK, Signal Layers Only, 0mils
+    SPI_MISO, Signal Layers Only, 0mils
+    SPI_MOSI, Signal Layers Only, 0mils
+    TXD0, Signal Layers Only, 0mils
+    TXD1, Signal Layers Only, 0mils
+    TX_EN, Signal Layers Only, 0mils
+    T_COL1, Signal Layers Only, 0mils
+    T_COL2, Signal Layers Only, 0mils
+    T_FIL0, Signal Layers Only, 0mils
+    T_FIL1, Signal Layers Only, 0mils
+    T_FIL2, Signal Layers Only, 0mils
+    T_FIL3, Signal Layers Only, 0mils
+    VCC, Signal Layers Only, 0mils
+    VDDA, Signal Layers Only, 0mils
+    W3V3, Signal Layers Only, 0mils
+    W5V, Signal Layers Only, 0mils
+    WAKEUP, Signal Layers Only, 0mils
+count : 56
