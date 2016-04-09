@@ -30,40 +30,41 @@ def tst_wifi(fd_serial):
 	try:
 		if client.recv(1024)=="OK\n" :
 			print ("Connection was sucessfuly.\n")
-                        menu = {}
-                        menu['1']="Change motors"
-                        menu['2']="Read IMU"
-                        menu['0']="Exit test"
+		else:
+	                print("ERROR... Connection wasn't successfuly\n.")
+			return
+        except:
+                print("\nERROR... Timeout.\n")
 
-			while(True):
-			        options=menu.keys()
-        		        options.sort()
+        menu = {}
+        menu['1']="Change motors"
+        menu['2']="Read IMU"
+        menu['0']="Exit test"
+
+	while(True):
+	        options=menu.keys()
+  	        options.sort()
 #MENU: WIFI TEST
-		                print "*************************************"
-               			print "***       Select WIFI test        ***"
-                		for entry in options:
-                        		print "    ", entry, " --> ", menu[entry]
-                		print "***                               ***"
-                		print "*************************************\n"
+	        print "*************************************"
+        	print "***       Select WIFI test        ***"
+        	for entry in options:
+                	print "    ", entry, " --> ", menu[entry]
+               	print "***                               ***"
+                print "*************************************\n"
 # Select option
-                		selection=raw_input("Please select an option: ")
-		        	if selection =='0':
-					client.send("close\n")
-					print "\nEnding WIFI test...\n"
-					client.close()
-					return 0
- 				elif selection == '1':
-      					wifi_motors(client)
-  				elif selection == '2':
-      					return
-					#tst_motors(fd_serial)
-				else:
-      					print "Unknown option selected!"
-
-        	else:	
-			print("ERROR... Connection wasn't sucessfuly.")
-	except:
-		print("\nERROR... Timeout.\n")		
+                selection=raw_input("Please select an option: ")
+		if selection =='0':
+			client.send("close\n")
+			print "\nEnding WIFI test...\n"
+			client.close()
+			return 0
+ 		elif selection == '1':
+      			wifi_motors(client)
+  		elif selection == '2':
+      			wifi_imu(client)
+		else:
+      			print "Unknown option selected!"
+		
    else:
 	print("ERROR... Cannot be read the IP address of server.\n\n")
 	
@@ -157,7 +158,7 @@ def wifi_motors(client):
                         if select[entry] == "X":
                             selection = selection + ":" + entry
 
-                client.send("motor\n" + selection + "\n")
+                client.send("brushless\n" + selection + "\n")
                 try:
                         receive = client.recv(1024)
                         if receive == "OK\n":
@@ -166,3 +167,21 @@ def wifi_motors(client):
                                 print("Error... Cannot be changed the duty cycle.\n\n")
 		except:
                         print("ERROR... Cannot be changed the duty cycle\n\n")
+
+
+def wifi_imu(client):
+   print "Initialized IMU test...\n"
+   try:
+        while(True):
+                time.sleep(1)
+                client.send("imu\n")
+		try:
+	        	receive = client.recv(1024)
+                except:
+                        print("ERROR... Cannot be read the IMU.\n\n")
+			return -1
+                receive = receive.split(':')
+                print "Pitch: " + receive[0] + " || Roll: " + receive[1] + " || Yaw: " + receive[2]
+   except KeyboardInterrupt:
+        print("\n\nReading of IMU finished.\n")
+

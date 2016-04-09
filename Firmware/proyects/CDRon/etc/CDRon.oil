@@ -64,8 +64,8 @@ TASK InitTask {
     STACK = 512;
     TYPE = BASIC;
     SCHEDULE = NON;
+    RESOURCE = BRUSHLESSR
     RESOURCE = POSIXR;
-    RESOURCE = MOTOR;
     EVENT = POSIXE;
 }
 
@@ -93,7 +93,7 @@ TASK wifiTask {
 }
 
 
-TASK motorUpdate {
+TASK brushlUpdate {
 	SCHEDULE = FULL;
 	TYPE = EXTENDED;
 	
@@ -101,7 +101,6 @@ TASK motorUpdate {
 	PRIORITY = 4;
 	STACK = 512;
 
-	EVENT = UPDATEMOTOR;
 	AUTOSTART = FALSE;
 	RESOURCE = POSIXR;
     EVENT = POSIXE;
@@ -115,7 +114,6 @@ TASK IMUUpdate {
 	PRIORITY = 4;
 	STACK = 512;
 
-	EVENT = UPDATEIMU;
 	AUTOSTART = FALSE;
 	RESOURCE = POSIXR;
     EVENT = POSIXE;
@@ -165,7 +163,7 @@ TASK Wifi_tst {
     RESOURCE = POSIXR;
 }
 
-TASK Motor_tst {
+TASK Brushless_tst {
     PRIORITY = 4;		
     ACTIVATION = 1;
     STACK = 512;
@@ -206,10 +204,8 @@ ALARM wifiPeriodicCheck {
 }
 
 RESOURCE = POSIXR;
-RESOURCE = MOTOR;
+RESOURCE = BRUSHLESSR;
 EVENT = POSIXE;
-EVENT = UPDATEMOTOR;
-EVENT = UPDATEIMU;
 
 APPMODE = AppMode1;
 

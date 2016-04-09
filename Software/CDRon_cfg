@@ -77,10 +77,10 @@ else:
 
 menu = {}
 menu['1']="Configure WIFI." 
-menu['2']="TEST MODE for motors (Change % duty)"
-menu['3']="TEST MODE for IMU (Read data)"
-menu['4']="TEST MODE for WIFI (Read IMU & change % duty)"
-menu['0']="Exit"
+menu['2']="TEST MODE for motors."
+menu['3']="TEST MODE for IMU."
+menu['4']="TEST MODE for WIFI."
+menu['0']="Exit."
 
 while True: 
   options=menu.keys()
@@ -107,7 +107,7 @@ while True:
   elif selection == '4':
       tst_wifi(fd_serial)		
   else: 
-      print "Unknown Option Selected!" 
+      print "Unknown option selected!" 
 
 # Cerrando puerto serial
 fd_serial.close()

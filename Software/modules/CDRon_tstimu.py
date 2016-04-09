@@ -17,6 +17,7 @@ def tst_imu(fd_serial):
 			print "Pitch: " + receive[0] + " || Roll: " + receive[1] + " || Yaw: " + receive[2]
 		else:
 			print("ERROR... Cannot be read the IMU.\n\n")
+			return
    except KeyboardInterrupt:
-	print("Finished reading Imu.\n")
+	print("\n\nReading of IMU finished.\n")
 	

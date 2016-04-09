@@ -33,46 +33,20 @@
  *
  */
 
-/** \brief Blinking_echo example source file
+/** \brief CDRon source file
  **
- ** This is a mini example of the CIAA Firmware.
+ ** Main source file of the CDRon project
  **
  **/
 
-/** \addtogroup CIAA_Firmware CIAA Firmware
- ** @{ */
-/** \addtogroup Examples CIAA Firmware Examples
- ** @{ */
-/** \addtogroup Blinking Blinking_echo example source file
- ** @{ */
-
-/*
- * Initials     Name
- * ---------------------------
- * MaCe         Mariano Cerdeiro
- * PR           Pablo Ridolfi
- * JuCe         Juan Cecconi
- * GMuro        Gustavo Muro
- * ErPe         Eric Pernia
- */
-
-/*
- * modification history (new versions first)
- * -----------------------------------------------------------
- * 20150603 v0.0.3   ErPe change uint8 type by uint8_t
- *                        in line 172
- * 20141019 v0.0.2   JuCe add printf in each task,
- *                        remove trailing spaces
- * 20140731 v0.0.1   PR   first functional version
- */
 
 /*==================[inclusions]=============================================*/
-//#undef FALSE
-//#undef TRUE
 
 #include "CDRon.h"         /* <= own header */
 #include "CDRon_lib.h"
 #include "CDRon_cfg.h"
+#include "CDRon_MPU6050.h"
+#include "CDRon_ESP8266.h"
 #include "os.h"               /* <= operating system header */
 
 #include "ciaaPOSIX_stdio.h"  /* <= device handler header */
@@ -84,33 +58,21 @@
 
 
 /*==================[internal data declaration]==============================*/
-/*==================[internal functions declaration]=========================*/
-/*==================[internal data definition]===============================*/
+struct status_struct status;
+struct BRUSHLESS_struct BRUSHLESS;
+volatile struct WIFI_struct WIFI;
+volatile struct IMU_struct IMU;
 
+uint8_t f_i2cerror = 0;
+unsigned int a= 0;
 
-/** \brief File descriptor for digital output ports
- *
- * Device path /dev/dio/out/0
- */
 int32_t fd_uartUSB,fd_uartWIFI;
 int32_t fd_i2c;
 int32_t fd_pwm[4];
 int32_t fd_pwm2;
 
-uint8_t f_i2cerror = 0;
-unsigned int a= 0;
-
-struct status_struct status;
-struct struct_motor cfg_motor;
-volatile struct WIFI_struct WIFI;
-volatile struct IMU_struct IMU;
 
 
-/*==================[external data definition]===============================*/
-
-/*==================[internal functions definition]==========================*/
-
-/*==================[external functions definition]==========================*/
 /** \brief Main function
  *
  * This is the main entry point of the software.
@@ -138,6 +100,14 @@ void ErrorHook(void)
    ShutdownOS(0);
 }
 
+
+
+
+/****************************************************************/
+/*************************** TASKS ******************************/
+/****************************************************************/
+
+
 /** \brief Initial task
  *
  * This task is started automatically in the application mode 1.
@@ -147,7 +117,6 @@ TASK(InitTask)
 
    /* init CIAA kernel and devices */
    ciaak_start();
-
 
    /* CDRon initialization */
    CDRon_initialization();
@@ -159,19 +128,31 @@ TASK(InitTask)
    TerminateTask();
 }
 
+/** \brief Brushless motor update
+ *
+ * This task update the duty cycle of each brushless motor with the value in BRUSHLESS.
+ */
 
-TASK(motorUpdate){
+TASK(brushlUpdate){ // Error with ¿brushlessUpdate?
 	  int i;
 	  uint32_t PWMduty;
 	  double f;
 
+	  /* for brushless motor 1 to 4 */
 	  for(i=0;i<3;i++){
-	  	  f= cfg_motor.PWMduty[i] * 4250.0;
-		  PWMduty = (int) (f);
+	  	  f= BRUSHLESS.duty[i] * 4250.0; // Highest register value; 425.000, Highest duty value: 100.0
+		  PWMduty = (int) (f);	// Round down duty
+
 		  ciaaPOSIX_write(fd_pwm[i], &PWMduty, 4);
 	  }
 	  TerminateTask();
 }
+
+/** \brief IMU update
+ *
+ * This task update the IMU data into IMU struct.
+ * This task is called from GPIO5 interrupt.
+ */
 
 TASK(IMUUpdate){
 		MPU6050_getData();
@@ -179,15 +160,24 @@ TASK(IMUUpdate){
 		TerminateTask();
 }
 
+
+/** \brief Periodic wifi task
+ *
+ * This task is called each 100 ms to check the incoming data
+ */
+
 TASK(wifiTask){
-	int32_t ret=0;      /* return value variable for posix calls  */
+	int32_t ret=0;  // return value variable for posix calls
 
 	ciaaPOSIX_ioctl(fd_uartWIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
 	if(ret > 0){
+		// if incoming data...
 		switch (status.mode){
+			// if MODE_TEST => go to wifi test
 			case MODE_TEST:
 				if(WIFI.busy == 0) ActivateTask(Wifi_tst);
 				break;
+			// if MODE_TEST => go to wifi
 			case MODE_NORMAL:
 				break;
 		}
@@ -196,26 +186,51 @@ TASK(wifiTask){
 }
 
 
+
+/** \brief I2c error task
+ *
+ * This task is called for timeout (¿Useful?), leaves the blocking mode
+ */
+
 TASK(I2Cerror){
+
 	volatile uint32_t * CONSET = 0x400A1000;
 	*CONSET = I2C_CON_STO_user;
 	f_i2cerror=1;
+
 	/* terminate task */
 	TerminateTask();
 }
 
-/** @} doxygen end group definition */
-/** @} doxygen end group definition */
-/** @} doxygen end group definition */
 
 
 /****************************************************************/
-/***************** Funciones de programa ************************/
+/********************* Program functions ************************/
 /****************************************************************/
+
+/** \brief Initialization function
+ *
+ * This function initialize the CIAA modules:
+ * 		- Serial uart FT2232
+ * 		- Serial uart Wifi
+ * 		- Serial I2C
+ * 		- PWM output
+ *
+ * 	Also, initialize the external modules:
+ * 		-MPU6050
+ * 		-ESP8266
+ *
+ *
+ */
 
 int CDRon_initialization(void){
 	   char buf[64]={0};
 	   int32_t ret=0;
+
+
+	   /*********************************/
+	   /** initialize the CIAA modules **/
+	   /*********************************/
 
 	   /* open CIAA serial FT2232 */
 	   fd_uartUSB = ciaaPOSIX_open("/dev/serial/uart/1", ciaaPOSIX_O_RDWR);
@@ -240,35 +255,47 @@ int CDRon_initialization(void){
 	   ciaaPOSIX_ioctl(fd_i2c,(int32_t) ciaaPOSIX_IOCTL_SET_REGISTERADDWIDTH, (uint32_t) ciaaPOSIX_IOCTL_REGISTERADDWIDTH_8bits );
 
 
+
 	   /* initialization PWM outputs for brushless motors*/
 
-	   /* Datos de configuración:
-	    * 	- Frecuencia clock = 204 MHz	=> Máxima frecuencia posible
-	    * 	- Frecuencia ESC = up to 499 Hz => Se configura F_esc = 480 Hz.
-	    * 	- Registro máximo = 425.000
-	    * 	- Resolución en tiempo ~= 4.9 ns
+	   /* Configuration info:
+	    * 	- Clock frequency = 204 MHz	=> Highest frequency
+	    * 	- ESC frequency = up to 499 Hz => F_esc = 480 Hz.
+	    * 	- Highest register value = 425.000
+	    * 	- Time resolution ~= 4.9 ns
 	    */
 
-	   GetResource(MOTOR);
+	   GetResource(BRUSHLESSR);
 
 	   fd_pwm[0]= ciaaPOSIX_open("/dev/dio/pwm/0", ciaaPOSIX_O_RDWR);
 	   fd_pwm[1]= ciaaPOSIX_open("/dev/dio/pwm/1", ciaaPOSIX_O_RDWR);
 	   fd_pwm[2]= ciaaPOSIX_open("/dev/dio/pwm/2", ciaaPOSIX_O_RDWR);
 
-	   ReleaseResource(MOTOR);
+	   ReleaseResource(BRUSHLESSR);
 
 	   CDRon_delayMs(100);
 
-		IMU.DRDY = 0;
+
+
+
+
+	   /*************************************/
+	   /** initialize the external modules **/
+	   /*************************************/
+
+		IMU.active = 0;
 	   /* initialization MPU6050 device */
 	   if(MPU6050_init() == 0)
-		   if(MPU6050_initDMP()== 0)
-			   IMU.DRDY = 1;
+		   if(MPU6050_initDMP()== 0){
+			   IMU.active = 1; // if OK IMU.active = 1 else = 0
+			   IMU.DRDY = 1; // DRDY=1 for interrupt
+		   }
 
+	   /* initialization ESP8266 device */
+	   WIFI.active = 0;
+	   if(WIFI_init() == 0) // if OK WIFI.active = 1 else = 0
+	   	   WIFI.active = 1;
 
-	   WIFI.activate = 0;
-	   if(WIFI_init() == 0) // if OK WIFI.activation = 1 else = 0
-	   	   WIFI.activate = 1;
 
 	   return 0;
 
@@ -277,7 +304,7 @@ int CDRon_initialization(void){
 
 
 /****************************************************************/
-/***************** Funciones del tiempo *************************/
+/********************* Time functions ***************************/
 /****************************************************************/
 
 int CDRon_delayMs(unsigned int ms){
@@ -300,16 +327,22 @@ int CDRon_getMs(unsigned long *count){
 
 
 /****************************************************************/
-/*********************** Interrupciones *************************/
+/************************** Interrupts **************************/
 /****************************************************************/
+
+/** \brief MPU6050 interrupt
+ *
+ * This interrupt actives the IMU reading
+ */
 
 ISR(GPIO5_IRQHandler)
 {
 
-	if(IMU.DRDY == 1){
+	if(IMU.DRDY == 1){ // if IMU reading is off
 		IMU.DRDY = 0;
 		ActivateTask(IMUUpdate);
 	}
+
 	MPU6050_clearInterrupt();
 }
 

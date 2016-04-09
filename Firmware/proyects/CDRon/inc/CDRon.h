@@ -1,4 +1,5 @@
-/* Copyright 2014, Mariano Cerdeiro
+/* Copyright CIAA
+ * Copyright 2014, Mariano Cerdeiro
  * Copyright 2014, Pablo Ridolfi
  * Copyright 2014, Juan Cecconi
  * Copyright 2014, Gustavo Muro
@@ -33,32 +34,9 @@
  *
  */
 
+
 #ifndef _CDRON_H_
 #define _CDRON_H_
-/** \brief Blinking example header file
- **
- ** This is a mini example of the CIAA Firmware
- **
- **/
-
-/** \addtogroup CIAA_Firmware CIAA Firmware
- ** @{ */
-/** \addtogroup Examples CIAA Firmware Examples
- ** @{ */
-/** \addtogroup Blinking Blinking example header file
- ** @{ */
-
-/*
- * Initials     Name
- * ---------------------------
- *
- */
-
-/*
- * modification history (new versions first)
- * -----------------------------------------------------------
- * yyyymmdd v0.0.1 initials initial version
- */
 
 /*==================[inclusions]=============================================*/
 #include "Os_Internal.h"              /* <= operating system header */
@@ -88,15 +66,16 @@ struct status_struct{
 	int wifiMode;
 };
 
-struct struct_motor{
-	double PWMduty[4];
+struct BRUSHLESS_struct{
+	double duty[4];
+	int active;
 };
 
 struct WIFI_struct{
 	char SSID[20];
 	char password[20];
 	char IPaddress[20];
-	int activate;
+	int active;
 	int busy;
 	int clientID;
 };
@@ -106,6 +85,7 @@ volatile struct IMU_struct{
     float yaw;
     float pitch;
     float roll;
+    int active;
     char DRDY;
 };
 
