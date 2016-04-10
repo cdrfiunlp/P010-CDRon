@@ -60,10 +60,11 @@
 /*==================[internal data declaration]==============================*/
 struct status_struct status;
 struct BRUSHLESS_struct BRUSHLESS;
+struct BATTERY_struct BATTERY;
 volatile struct WIFI_struct WIFI;
 volatile struct IMU_struct IMU;
 
-uint8_t f_i2cerror = 0;
+uint8_t f_i2cerror = 0,data;
 unsigned int a= 0;
 
 int32_t fd_uartUSB,fd_uartWIFI;
@@ -159,6 +160,25 @@ TASK(IMUUpdate){
 		IMU.DRDY = 1;
 		TerminateTask();
 }
+
+
+
+/** \brief Measurement battery charge level
+ *
+ *
+ */
+
+TASK(batteryUpdate){
+
+	batteryMeasure(ADC_CH1);
+
+	batteryMeasure(ADC_CH2);
+
+	batteryMeasure(ADC_CH3);
+
+	TerminateTask();
+}
+
 
 
 /** \brief Periodic wifi task
@@ -297,6 +317,21 @@ int CDRon_initialization(void){
 	   	   WIFI.active = 1;
 
 
+
+	   ADC_CLOCK_SETUP_T setup;             /** <= adc setup */
+	   ADC_RESOLUTION_T resolution;
+
+
+	   BATTERY.active = 0;
+	   /* ADC0 Init */
+	   Chip_ADC_Init(LPC_ADC0, &(setup));
+	   BATTERY.gain[0] = 3.3/255.0;
+	   BATTERY.gain[1] = 3.3/255.0;
+	   BATTERY.gain[2] = 3.3/255.0;
+
+	   SetRelAlarm(batteryPeriodicMeasure,1000,1000);
+
+	   BATTERY.active = 1;
 	   return 0;
 
 }

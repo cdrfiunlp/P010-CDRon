@@ -89,6 +89,13 @@ volatile struct IMU_struct{
     char DRDY;
 };
 
+struct BATTERY_struct{
+	float gain[3];
+	float S[3];
+	float measure;
+	int active;
+};
+
 /*==================[external data declaration]==============================*/
 
 /*==================[external functions declaration]=========================*/
