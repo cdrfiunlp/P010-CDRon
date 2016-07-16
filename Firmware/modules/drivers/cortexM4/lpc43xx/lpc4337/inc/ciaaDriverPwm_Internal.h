@@ -91,6 +91,9 @@ extern ciaaDriverPwm_pwmType ciaaDriverPwm_pwm1;
 
 /** \brief Pwm 2 */
 extern ciaaDriverPwm_pwmType ciaaDriverPwm_pwm2;
+
+/** \brief Pwm 3 */
+extern ciaaDriverPwm_pwmType ciaaDriverPwm_pwm3;
 /*==================[external functions declaration]=========================*/
 
 /*==================[cplusplus]==============================================*/

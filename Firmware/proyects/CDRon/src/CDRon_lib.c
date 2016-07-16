@@ -107,7 +107,7 @@ void refreshBrushless(char * buf){
 	duty= AUX_sstr2float(buf);	//first data was <% duty>
 
 	/* For brushless 1 to 4, update duty data */
-	for(i=0;i<3;i++){
+	for(i=0;i<4;i++){
 		chr = strchr(buf,':');
 		if (chr != NULL){
 			chr[0] = ' ';		 // Erase ':'

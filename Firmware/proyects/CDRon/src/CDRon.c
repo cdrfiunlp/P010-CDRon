@@ -140,7 +140,7 @@ TASK(brushlUpdate){ // Error with ¿brushlessUpdate?
 	  double f;
 
 	  /* for brushless motor 1 to 4 */
-	  for(i=0;i<3;i++){
+	  for(i=0;i<4;i++){
 	  	  f= BRUSHLESS.duty[i] * 4250.0; // Highest register value; 425.000, Highest duty value: 100.0
 		  PWMduty = (int) (f);	// Round down duty
 
@@ -290,6 +290,7 @@ int CDRon_initialization(void){
 	   fd_pwm[0]= ciaaPOSIX_open("/dev/dio/pwm/0", ciaaPOSIX_O_RDWR);
 	   fd_pwm[1]= ciaaPOSIX_open("/dev/dio/pwm/1", ciaaPOSIX_O_RDWR);
 	   fd_pwm[2]= ciaaPOSIX_open("/dev/dio/pwm/2", ciaaPOSIX_O_RDWR);
+	   fd_pwm[3]= ciaaPOSIX_open("/dev/dio/pwm/3", ciaaPOSIX_O_RDWR);
 
 	   ReleaseResource(BRUSHLESSR);
 
