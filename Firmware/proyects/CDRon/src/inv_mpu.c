@@ -43,7 +43,7 @@
 
 #define i2c_write   CDRon_i2c_write
 #define i2c_read    CDRon_i2c_read
-#define delay_ms    CDRon_delayMs;
+#define delay_ms    CDRon_delayMs
 #define get_ms      CDRon_getMs;
 #define log_i(...)     do {} while (0)
 #define log_e(...)     do {} while (0)
@@ -720,6 +720,7 @@ int mpu_init(struct int_param_s *int_param)
         return -1;
 #else
     /* Already disabled by setup_compass. */
+    delay_ms(100);
     if (mpu_set_bypass(0))
         return -1;
 #endif
