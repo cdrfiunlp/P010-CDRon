@@ -105,7 +105,7 @@ void ciaak_start(void)
    /* ciaaDioDevices_init(); */
    ciaaDriverDio_init();
    ciaaDriverPwm_init();
-   ciaaDriverAio_init();
+   //ciaaDriverAio_init();
 }
 
 void *ciaak_malloc(size_t size)

@@ -119,6 +119,19 @@ TASK IMUUpdate {
     EVENT = POSIXE;
 }
 
+TASK batteryUpdate {
+	SCHEDULE = FULL;
+	TYPE = EXTENDED;
+	
+	ACTIVATION = 1;
+	PRIORITY = 4;
+	STACK = 512;
+
+	AUTOSTART = FALSE;
+	RESOURCE = POSIXR;
+    EVENT = POSIXE;
+}
+
 
 /*#################333 CONFIGURATION AND TESTING TASK ###########################*/
 
@@ -164,7 +177,7 @@ TASK Wifi_tst {
 }
 
 TASK Brushless_tst {
-    PRIORITY = 4;		
+    PRIORITY = 0	
     ACTIVATION = 1;
     STACK = 512;
     TYPE = EXTENDED;
@@ -203,6 +216,12 @@ ALARM wifiPeriodicCheck {
     }
 }
 
+ALARM batteryPeriodicMeasure {
+    COUNTER = Delayms;
+    ACTION = ACTIVATETASK {
+        TASK = batteryUpdate;
+    }
+}
 RESOURCE = POSIXR;
 RESOURCE = BRUSHLESSR;
 EVENT = POSIXE;

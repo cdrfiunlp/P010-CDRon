@@ -14,7 +14,7 @@
 
 extern int32_t fd_i2c;
 extern struct BRUSHLESS_struct BRUSHLESS;
-
+extern struct BATTERY_struct BATTERY;
 
 /****************************************************************/
 /********************** CIAA functions **************************/
@@ -107,7 +107,7 @@ void refreshBrushless(char * buf){
 	duty= AUX_sstr2float(buf);	//first data was <% duty>
 
 	/* For brushless 1 to 4, update duty data */
-	for(i=0;i<3;i++){
+	for(i=0;i<4;i++){
 		chr = strchr(buf,':');
 		if (chr != NULL){
 			chr[0] = ' ';		 // Erase ':'
@@ -115,6 +115,31 @@ void refreshBrushless(char * buf){
 			BRUSHLESS.duty[index-1] = duty; //update duty data for brushless <index>
 		}
 	}
+	return;
+}
+
+void batteryMeasure(ADC_CHANNEL_T CH){
+	unsigned long time,time_now;
+	uint8_t adc_value;
+
+	Chip_ADC_EnableChannel(LPC_ADC0, CH, ENABLE);
+
+	Chip_ADC_SetStartMode(LPC_ADC0, ADC_START_NOW, ADC_TRIGGERMODE_RISING);
+	CDRon_getMs(&time);
+	time_now = time;
+	while((Chip_ADC_ReadStatus(LPC_ADC0, CH, ADC_DR_DONE_STAT)!=SET) && (time_now-time < 100))
+		   CDRon_getMs(&time_now);
+
+	if (time_now-time < 100){
+		   Chip_ADC_ReadByte(LPC_ADC0, CH, &adc_value);
+		   BATTERY.S[CH-1] = BATTERY.gain[CH-1]*adc_value;
+		   if (CH == 3)
+			   BATTERY.measure = BATTERY.gain[2]*adc_value;
+	}else
+		   BATTERY.S[CH-1] = -1.0;
+
+
+	Chip_ADC_EnableChannel(LPC_ADC0, CH, DISABLE);
 	return;
 }
 
