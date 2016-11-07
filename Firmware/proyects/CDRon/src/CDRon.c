@@ -134,7 +134,7 @@ TASK(InitTask)
  * This task update the duty cycle of each brushless motor with the value in BRUSHLESS.
  */
 
-TASK(brushlUpdate){ // Error with Â¿brushlessUpdate?
+TASK(brushlUpdate){ // Error with ¿brushlessUpdate?
 	  int i;
 	  uint32_t PWMduty;
 	  double f;
@@ -304,6 +304,16 @@ int CDRon_initialization(void){
 	   /** initialize the external modules **/
 	   /*************************************/
 
+	   /* initialization ESP8266 device */
+	   WIFI.active = 0;
+	   if(WIFI_init() == 0) // if OK WIFI.active = 1 else = 0
+	   	   WIFI.active = 1;
+		ciaaPOSIX_write(fd_uartUSB, WIFI.IPaddress, ciaaPOSIX_strlen(WIFI.IPaddress));
+		CDRon_delayMs(1);
+		ciaaPOSIX_write(fd_uartUSB, "\n", ciaaPOSIX_strlen("\n"));
+	   if(WIFI_serverTCP() != -1)
+	    	SetRelAlarm(wifiPeriodicCheck,100,100);
+
 		IMU.active = 0;
 	   /* initialization MPU6050 device */
 	   if(MPU6050_init() == 0)
@@ -311,11 +321,6 @@ int CDRon_initialization(void){
 			   IMU.active = 1; // if OK IMU.active = 1 else = 0
 			   IMU.DRDY = 1; // DRDY=1 for interrupt
 		   }
-
-	   /* initialization ESP8266 device */
-	   WIFI.active = 0;
-	   if(WIFI_init() == 0) // if OK WIFI.active = 1 else = 0
-	   	   WIFI.active = 1;
 
 
 

@@ -70,7 +70,7 @@ TASK InitTask {
 }
 
 TASK StartupConfig {
-    PRIORITY = 3;		
+    PRIORITY = 2;		
     ACTIVATION = 1;
     STACK = 512;
     TYPE = BASIC;
@@ -84,7 +84,7 @@ TASK wifiTask {
 	TYPE = EXTENDED;
 	
 	ACTIVATION = 1;
-	PRIORITY = 4;
+	PRIORITY = 10;
 	STACK = 512;
 
 	AUTOSTART = FALSE;
@@ -98,7 +98,7 @@ TASK brushlUpdate {
 	TYPE = EXTENDED;
 	
 	ACTIVATION = 1;
-	PRIORITY = 4;
+	PRIORITY = 10;
 	STACK = 512;
 
 	AUTOSTART = FALSE;
@@ -111,7 +111,7 @@ TASK IMUUpdate {
 	TYPE = EXTENDED;
 	
 	ACTIVATION = 1;
-	PRIORITY = 4;
+	PRIORITY = 10;
 	STACK = 512;
 
 	AUTOSTART = FALSE;
@@ -124,7 +124,7 @@ TASK batteryUpdate {
 	TYPE = EXTENDED;
 	
 	ACTIVATION = 1;
-	PRIORITY = 4;
+	PRIORITY = 10;
 	STACK = 512;
 
 	AUTOSTART = FALSE;
@@ -136,7 +136,7 @@ TASK batteryUpdate {
 /*#################333 CONFIGURATION AND TESTING TASK ###########################*/
 
 TASK ConfigMode {
-    PRIORITY = 2;		
+    PRIORITY = 3;
     ACTIVATION = 1;
     STACK = 512;
     TYPE = BASIC;
@@ -146,7 +146,7 @@ TASK ConfigMode {
 }
 
 TASK Wifi_cfg {
-    PRIORITY = 4;		
+    PRIORITY = 4;	
     ACTIVATION = 1;
     STACK = 512;
     TYPE = BASIC;
@@ -177,7 +177,7 @@ TASK Wifi_tst {
 }
 
 TASK Brushless_tst {
-    PRIORITY = 0	
+    PRIORITY = 4;	
     ACTIVATION = 1;
     STACK = 512;
     TYPE = EXTENDED;
@@ -194,7 +194,7 @@ TASK I2Cerror {
 	TYPE = EXTENDED;
 	
 	ACTIVATION = 1;
-	PRIORITY = 10;
+	PRIORITY = 11;
 	STACK = 128;
 
 	AUTOSTART = FALSE;
@@ -239,26 +239,25 @@ COUNTER Delayms {
 ISR UART0_IRQHandler {
    INTERRUPT = UART0;
    CATEGORY = 2;
-   PRIORITY = 0;
+   PRIORITY = 20;
 };
 
 ISR UART2_IRQHandler {
-
    INTERRUPT = UART2;
    CATEGORY = 2;
-   PRIORITY = 0;
+   PRIORITY = 20;
 };
 
 ISR UART3_IRQHandler {
    INTERRUPT = UART3;
    CATEGORY = 2;
-   PRIORITY = 0;
+   PRIORITY = 20;
 };
 
 ISR GPIO5_IRQHandler {
    INTERRUPT = GPIO5;
    CATEGORY = 2;
-   PRIORITY = 1;
+   PRIORITY = 19;
 };
 
 };

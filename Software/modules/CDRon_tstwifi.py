@@ -12,18 +12,20 @@ def tst_wifi(fd_serial):
    time.sleep(0.3)
    if(fd_serial.inWaiting() != 0):
 	IP = fd_serial.readline()
-	try:
-    		socket.inet_aton(IP)
-		if IP == "0.0.0.0":
-			print ("ERROR... Invalid IP address")
-	except socket.error:
-		print ("ERROR... Invalid IP address")
+	#try:
+    #	socket.inet_aton(IP)
+	#	if IP == "0.0.0.0":
+	#		print ("ERROR... Invalid IP address")
+	#except socket.error:
+	#	print ("ERROR... Invalid IP address")
 	PORT = 333
+	print IP + '1'
+	client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	client.settimeout(1)	
 	try:
-		client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		client.settimeout(1)	
-		client.connect((IP,PORT))
-	except:
+		client.connect(('192.168.1.101', 333))
+	except Exception,e:
+		print str(e)
 		print("ERROR... Cannot be connected with the server.")
 		return
 #Waiting for answer

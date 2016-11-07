@@ -23,6 +23,9 @@ extern struct BRUSHLESS_struct BRUSHLESS;
 extern volatile struct WIFI_struct WIFI;
 extern volatile struct IMU_struct IMU;
 
+extern int CDRon_delayMs(unsigned int);
+extern int CDRon_getMs(unsigned long *);
+
 
 
 /****************************************************************/
@@ -66,7 +69,7 @@ TASK(ConfigMode){
 	char buf[64]={0};   /* buffer for uart operation (modified length in ciaaDriverUart.c    */
 	int32_t ret=0;      /* return value variable for posix calls  */
 
-	WIFI.clientID = -2;	//indicate tcp server off
+	//WIFI.clientID = -2;	//indicate tcp server off
 
 	status.mode = MODE_TEST; // Activate mode test
 
@@ -142,6 +145,7 @@ TASK(Wifi_cfg){
 		/* Data receive <SSID>:<password> */
 		len=strcspn(buf, ":");
 		strncpy(WIFI.SSID,buf,len);
+		strncpy(&WIFI.SSID[len],'\0',1);
 		chr = strchr(buf,':');
 		strcpy(WIFI.password, &chr[1]);
 
@@ -178,7 +182,7 @@ TASK(Brushless_tst){
 
 		// Testing was successfuly, send "OK" and call Brushless update task
 		ciaaPOSIX_write(fd_uartUSB, "OK\n", ciaaPOSIX_strlen("OK\n"));
-		ChainTask(brushlUpdate);
+		ActivateTask(brushlUpdate);
 
 	}
 	TerminateTask();
@@ -232,7 +236,7 @@ TASK(Wifi_tst){
 				// testing was sucessfully, send "OK" and call brushless update task
 				WIFI_sendData("OK\n",ciaaPOSIX_strlen("OK\n"));
 				WIFI.busy = 0;
-				ChainTask(brushlUpdate);
+				ActivateTask(brushlUpdate);
 
 			/* if receive "close\n" => re-init clientID */
 			} else if(strstr(buf, "close\n") != NULL)
