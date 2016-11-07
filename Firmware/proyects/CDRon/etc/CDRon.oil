@@ -166,6 +166,16 @@ TASK IMU_tst {
     RESOURCE = POSIXR;
 }
 
+TASK IMUBurst {
+    PRIORITY = 4;		
+    ACTIVATION = 1;
+    STACK = 512;
+    TYPE = EXTENDED;
+    SCHEDULE = FULL;
+    EVENT = POSIXE;
+    RESOURCE = POSIXR;
+}
+
 TASK Wifi_tst {
     PRIORITY = 4;		
     ACTIVATION = 1;
@@ -213,6 +223,13 @@ ALARM wifiPeriodicCheck {
     COUNTER = Delayms;
     ACTION = ACTIVATETASK {
         TASK = wifiTask;
+    }
+}
+
+ALARM IMUBurstAlarm {
+    COUNTER = Delayms;
+    ACTION = ACTIVATETASK {
+        TASK = IMUBurst;
     }
 }
 

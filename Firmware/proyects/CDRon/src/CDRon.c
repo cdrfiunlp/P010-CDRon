@@ -123,7 +123,7 @@ TASK(InitTask)
    CDRon_initialization();
 
    /* Activates startupConfigtasks */
-   ActivateTask(StartupConfig);
+   //ActivateTask(StartupConfig);
 
    /* terminate task */
    TerminateTask();
@@ -161,6 +161,14 @@ TASK(IMUUpdate){
 		TerminateTask();
 }
 
+TASK(IMUBurst){
+		char str[30] = {0};
+		MPU6050_packaging(str); //data arrangement => <pitch>:<roll>:<yaw>\n
+
+		/* Send IMU data */
+		ciaaPOSIX_write(fd_uartUSB,str, ciaaPOSIX_strlen(str));
+		TerminateTask();
+}
 
 
 /** \brief Measurement battery charge level
@@ -188,23 +196,59 @@ TASK(batteryUpdate){
 
 TASK(wifiTask){
 	int32_t ret=0;  // return value variable for posix calls
+	char buf[64]={0};   /* buffer for uart operation (length modified in ciaaDriverUart.c    */
+	int time;
+	char* chr;
 
 	ciaaPOSIX_ioctl(fd_uartWIFI, ciaaPOSIX_IOCTL_GET_RX_COUNT, &ret);
 	if(ret > 0){
-		// if incoming data...
-		switch (status.mode){
-			// if MODE_TEST => go to wifi test
-			case MODE_TEST:
-				if(WIFI.busy == 0) ActivateTask(Wifi_tst);
-				break;
-			// if MODE_TEST => go to wifi
-			case MODE_NORMAL:
-				break;
-		}
+			ciaaPOSIX_read(fd_uartWIFI, buf, 64);
+
+			switch (WIFI_readData(buf)){
+			    /* Process incoming data */
+				case 0:
+
+					/* if receive "brushless\n" => init duty update */
+					if(strstr(buf, "brushless\n") != NULL){
+						chr = &buf[ciaaPOSIX_strlen("brushless\n")];
+
+						//update BRUSHLESS data
+						//Data struct <% duty>:[<brush 1>:<brush 2>:<brush 3>:[brush 4>] optional, at lease one brushless motor
+						refreshBrushless(chr);
+
+						// testing was sucessfully, send "OK" and call brushless update task
+						WIFI_sendData("OK\n",ciaaPOSIX_strlen("OK\n"));
+						WIFI.busy = 0;
+						ActivateTask(brushlUpdate);
+
+					/* if receive "close\n" => re-init clientID */
+					} else if(strstr(buf, "close\n") != NULL)
+						WIFI.clientID = -1;
+
+
+					/* if receive "imu\n" => send IMU data */
+					else if(strstr(buf, "imu:") != NULL){
+						time = (int) AUX_sstr2float(&buf[4]);
+						SetRelAlarm(IMUBurstAlarm,time,time);
+
+					}
+					break;
+
+				/* Client connection was successfully, send "OK" */
+				case 1:
+					WIFI_sendData("OK\n",ciaaPOSIX_strlen("OK\n"));
+
+					break;
+
+				/* Reading data causes error*/
+				case -1:
+					break;
+			}
+
+			WIFI.busy = 0;
 	}
 	TerminateTask();
 }
-
 
 
 /** \brief I2c error task
@@ -251,7 +295,7 @@ int CDRon_initialization(void){
 	   /*********************************/
 	   /** initialize the CIAA modules **/
 	   /*********************************/
-
+	   status.mode = MODE_NORMAL;
 	   /* open CIAA serial FT2232 */
 	   fd_uartUSB = ciaaPOSIX_open("/dev/serial/uart/1", ciaaPOSIX_O_RDWR);
 	   /* open CIAA serial WIFI */
@@ -308,9 +352,6 @@ int CDRon_initialization(void){
 	   WIFI.active = 0;
 	   if(WIFI_init() == 0) // if OK WIFI.active = 1 else = 0
 	   	   WIFI.active = 1;
-		ciaaPOSIX_write(fd_uartUSB, WIFI.IPaddress, ciaaPOSIX_strlen(WIFI.IPaddress));
-		CDRon_delayMs(1);
-		ciaaPOSIX_write(fd_uartUSB, "\n", ciaaPOSIX_strlen("\n"));
 	   if(WIFI_serverTCP() != -1)
 	    	SetRelAlarm(wifiPeriodicCheck,100,100);
 

@@ -207,14 +207,16 @@ int WIFI_readData(char* buf){
 	   char *ret;
 	   char temp[5];
 	   const char ch = ',';
-	   const char str[2] =":";
+	   const char str[2] = ":";
 	   int len,aux;
 
 	   ret = strstr(buf, "+IPD");
 	   if(ret != NULL){
-		   ret = strrchr(ret,ch);
+		   ret = strchr(ret,ch);
+		   ret = strchr(ret+1,ch);
 		   aux = strcspn(ret,str);
 		   strncpy(temp, ret+1, aux-1);
+		   temp[aux-1] = '\0';
 		   len = strtol(temp,NULL,10);
 		   strncpy(buf, ret+aux+1, len);
 		   buf[len] = '\0';
